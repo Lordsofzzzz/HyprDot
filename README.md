@@ -66,10 +66,10 @@ HyprDot/
 ![Screenshot 2](./pics/shot2.png)
 ![Screenshot 3](./pics/shot3.png)
 ![Screenshot 4](./pics/shot4.png)
-![Screenshot 5](./pics/shot5.png)
 ![Screenshot 6](./pics/shot6.png)
 ![Screenshot 7](./pics/shot7.png)
 ![Screenshot 9](./pics/shot9.png)
+![Screenshot 10](./pics/shot10.png)
 
 </details>
 
