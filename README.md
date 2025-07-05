@@ -41,12 +41,12 @@ HyprDot/
 * ✨ Minimal, dark-themed rice with **pywal**-generated colors
 * 🌈 Dynamic color schemes that adapt to your wallpaper
 * 👟 Smooth animations and transitions with Hyprland
-* �️ Wallpaper management handled by `swww`
+* 🖼️ Wallpaper management handled by `swww`
 
 ### 🏗️ Interface & Navigation
-* � Clean and dynamic Waybar layout with custom styling
+* 💡 Clean and dynamic Waybar layout with custom styling
 * 🧩 Rofi used as application launcher with custom theming
-* � Beautiful notifications handled by `swaync`
+* 🔔 Beautiful notifications handled by `swaync`
 * ⌨️ Optimized keybindings for efficient workflow
 
 ### 🔧 System Integration
@@ -289,7 +289,7 @@ which hyprland waybar rofi swww swaync
 Contributions are welcome! Here's how you can help:
 
 1. 🐛 **Report bugs** - Open an issue with detailed information
-2. � **Suggest features** - Share your ideas for improvements
+2. 💡 **Suggest features** - Share your ideas for improvements
 3. 📝 **Improve docs** - Help make the README even better
 4. 🔧 **Submit PRs** - Fix bugs or add new features
 
@@ -302,7 +302,7 @@ Contributions are welcome! Here's how you can help:
 
 ---
 
-## �📃 License
+## 📃 License
 
 MIT License - Feel free to use, modify, or fork. Credit appreciated! ❤️
 
