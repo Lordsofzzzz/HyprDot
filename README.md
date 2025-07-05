@@ -66,7 +66,6 @@ HyprDot/
 ![Screenshot 2](./pics/screenshot_2025-07-05_23-21-46.png)
 ![Screenshot 3](./pics/screenshot_2025-07-05_23-27-34.png)
 ![Screenshot 5](./pics/screenshot_2025-07-05_23-27-59.png)
-![Screenshot 7](./pics/screenshot_2025-07-05_23-29-05.png)
 ![Screenshot 8](./pics/screenshot_2025-07-05_23-29-40.png)
 ![Screenshot 9](./pics/screenshot_2025-07-05_23-29-47.png)
 
