@@ -1,4 +1,12 @@
-# 🌀 Hyp```
+# 🌀 HyprDot
+
+✨ My personal dotfiles for [Hyprland](https://github.com/hyprwm/Hyprland) + [Waybar](https://github.com/Alexays/Waybar), customized for a clean and minimal workflow on Wayland.
+
+---
+
+## 📂 Structure
+
+```
 HyprDot/
 ├── 🖥️ hypr/              # Hyprland window manager config
 │   └── hyprland.conf     # Main Hyprland configuration
@@ -12,25 +20,6 @@ HyprDot/
 │   └── *.png            # Desktop screenshots
 ├── 📋 README.md         # This file
 └── 📄 LICENSE           # MIT License
-```sonal dotfiles for [Hyprland](https://github.com/hyprwm/Hyprland) + [Waybar](https://github.com/Alexays/Waybar), customized for a clean and minimal workflow on Wayland.
-
----
-
-## 📂 Structure
-
-```
-HyprDot/
-├── �️ hypr/              # Hyprland window manager config
-│   └── hyprland.conf     # Main Hyprland configuration
-├── 🎨 waybar/            # Status bar configuration
-│   ├── config           # Waybar layout & modules
-│   └── style.css        # Waybar styling & colors
-├── 🔧 scripts/           # Utility scripts
-│   ├── autostart.sh     # Auto-start applications
-│   └── cycle_power_profile.sh # Power profile switcher
-├── 📸 pics/              # Screenshots & media
-│   └── *.png            # Desktop screenshots
-└── 📋 README.md         # This file
 ```
 
 ---
