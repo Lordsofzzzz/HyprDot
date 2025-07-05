@@ -29,7 +29,7 @@ HyprDot/
 
 ## 📸 Screenshots
 
-### Main Desktop
+### WayBar
 ![Desktop Screenshot](./pics/screenshot_2025-07-05_23-49-15.png)
 
 ### Different Views
