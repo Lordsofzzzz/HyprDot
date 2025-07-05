@@ -34,7 +34,7 @@
     },
     "tooltip": true,
     "tooltip-format": "Power Profile: {profile}",
-    "on-click": "/home/aditya/.config/waybar/scripts/cycle_power_profile.sh"
+    "on-click": "/home/{USRNAME}/.config/scripts/cycle_power_profile.sh"
   },
   "hyprland/workspaces": {
     "format": "{icon}",
