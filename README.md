@@ -55,19 +55,21 @@ HyprDot/
 
 ## 📸 Screenshots
 
-### WayBar
-![Desktop Screenshot](./pics/screenshot_2025-07-05_23-49-15.png)
+### Desktop Overview
+![Desktop Screenshot](./pics/shot8.png)
 
 ### Different Views
 <details>
 <summary>Click to see more screenshots</summary>
 
-![Screenshot 1](./pics/screenshot_2025-07-05_23-21-33.png)
-![Screenshot 2](./pics/screenshot_2025-07-05_23-21-46.png)
-![Screenshot 3](./pics/screenshot_2025-07-05_23-27-34.png)
-![Screenshot 5](./pics/screenshot_2025-07-05_23-27-59.png)
-![Screenshot 8](./pics/screenshot_2025-07-05_23-29-40.png)
-![Screenshot 9](./pics/screenshot_2025-07-05_23-29-47.png)
+![Screenshot 1](./pics/shot1.png)
+![Screenshot 2](./pics/shot2.png)
+![Screenshot 3](./pics/shot3.png)
+![Screenshot 4](./pics/shot4.png)
+![Screenshot 5](./pics/shot5.png)
+![Screenshot 6](./pics/shot6.png)
+![Screenshot 7](./pics/shot7.png)
+![Screenshot 9](./pics/shot9.png)
 
 </details>
 
