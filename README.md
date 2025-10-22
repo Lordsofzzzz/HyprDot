@@ -100,7 +100,7 @@ chmod +x scripts/*.sh
 mkdir -p ~/.local/bin
 cp scripts/* ~/.local/bin/
 
-# Restart Hyprland or reload configuration
+# Restart Hyprland
 hyprctl reload
 ```
 
