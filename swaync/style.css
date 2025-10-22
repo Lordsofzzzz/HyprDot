@@ -1,0 +1,119 @@
+@import url("file:///home/lord/.cache/wal/colors-waybar.css");
+
+* {
+    all: unset;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+/* Notification Window */
+.notification-row {
+    outline: none;
+}
+
+.notification {
+    background: @background;
+    border-radius: 6px;
+    margin: 4px;
+    border: 1px solid @color1;
+    padding: 4px;
+}
+
+.notification-content {
+    padding: 8px;
+}
+
+.close-button {
+    background: @color1;
+    color: @foreground;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin: 4px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+.close-button:hover {
+    background: @color2;
+}
+
+.summary {
+    color: @foreground;
+    font-weight: bold;
+    margin-bottom: 2px;
+    font-size: 13px;
+}
+
+.body {
+    color: @color7;
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.notification-default-action:hover {
+    background-color: alpha(@color1, 0.1);
+}
+
+/* Control Center */
+.control-center {
+    background: @background;
+    border: 1px solid @color1;
+    border-radius: 6px;
+    margin: 8px;
+    padding: 8px;
+}
+
+.widget-title {
+    color: @foreground;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 6px;
+}
+
+.widget-title > button {
+    color: @foreground;
+    background: @color1;
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 11px;
+}
+
+.widget-title > button:hover {
+    background: @color2;
+}
+
+/* DND Toggle */
+.widget-dnd {
+    margin: 6px;
+    padding: 6px;
+}
+
+.widget-dnd > switch {
+    background: @color8;
+    border-radius: 10px;
+    min-width: 36px;
+    min-height: 18px;
+}
+
+.widget-dnd > switch:checked {
+    background: @color2;
+}
+
+.widget-dnd > switch slider {
+    background: @foreground;
+    border-radius: 8px;
+}
+
+/* Notification List */
+.control-center-list {
+    background: transparent;
+}
+
+.blank-window {
+    background: transparent;
+}
+
+/* Critical Notifications */
+.notification.critical {
+    border: 1px solid @color1;
+}

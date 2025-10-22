@@ -1,180 +1,214 @@
-@import url("/home/{USRNAME}/.cache/wal/colors-waybar.css");
+/* ============================================
+   WAYBAR CONFIGURATION STYLESHEET
+   ============================================ */
+
+@import url("/home/lord/.cache/wal/colors-waybar.css");
+
+/* ============================================
+   GLOBAL SETTINGS
+   ============================================ */
 * {
-  font-family: "FiraCode Nerd Font", "JetBrainsMono Nerd Font Propo", "Noto Sans", sans-serif;
-  font-size: 14px;
-  border-radius: 5px;
-  font-weight: bold;
+  border: none;
+  border-radius: 0;
+  font-family: "FiraCode Nerd Font";
+  font-size: 15px;
+  min-height: 0;
 }
+
 window#waybar {
-  background-color: transparent;
-  color: @foreground;
-  margin-left: 12px;
-  margin-right: 12px;
+  background: transparent;
 }
-/* Workspace Styling */
+
+/* ============================================
+   BASE MODULE STYLING
+   ============================================ */
+#workspaces,
+#power-profiles-daemon,
+#clock,
+#cpu,
+#memory,
+#backlight,
+#bluetooth,
+#network,
+#pulseaudio,
+#battery,
+#tray,
+#custom-notification,
+#custom-poweroff {
+  background: rgba(0, 0, 0, 0.4);
+  color: @foreground;
+  margin: 7px 4px;
+  padding: 2px 14px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+#power-profiles-daemon:hover,
+#clock:hover,
+#cpu:hover,
+#memory:hover,
+#backlight:hover,
+#bluetooth:hover,
+#network:hover,
+#pulseaudio:hover,
+#battery:hover,
+#tray:hover,
+#custom-notification:hover,
+#custom-poweroff:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================
+   WORKSPACES MODULE
+   ============================================ */
 #workspaces {
-  background-color: @background;
-  padding: 2px 2px 2px 2px;
-  border-radius: 5px;
-  margin-left: 12px;
+  padding: 0px 5px;
 }
+
 #workspaces button {
-  background-color: @background;
-  color: @foreground;
+  padding: 0px 5px;
+  margin: 4px 2px;
+  border-radius: 50%;
+  min-width: 8px;
+  min-height: 8px;
+  color: transparent;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
   border: none;
   box-shadow: none;
   text-shadow: none;
-  transition: background-color 0.6s ease, color 0.6s ease, padding-left 0.3s ease, padding-right 0.3s ease;
+  outline: none;
 }
+
 #workspaces button:hover {
-  background: @color4;
+  background: rgba(255, 255, 255, 0.5);
 }
-#workspaces button:focus {
-  outline: 2px solid @color1;
-  outline-offset: 2px;
-}
+
 #workspaces button.active {
-  background-color: @color1;
-  color: @foreground;
-  padding: 5px 15px;
+  background: @color4;
+  min-width: 24px;
+  border-radius: 12px;
 }
-#workspaces button.active:hover {
-  color: @background;
-  background: @color2;
-}
-#workspaces button.empty {
-  color: @foreground;
-}
+
 #workspaces button.urgent {
-  background-color: @color4;
-  color: @background;
-  animation: urgent-blink 1s linear infinite;
+  background: @color1;
 }
-@keyframes urgent-blink {
-  50% { opacity: 0.7; }
+
+/* ============================================
+   TRAY MODULE
+   ============================================ */
+#tray {
+  padding: 2px 8px;
 }
-/* Common Module Styling */
-.waybar-module {
-  color: @foreground;
-  background-color: @background;
-  padding: 0 15px 0 15px;
-  margin: 0 6px;
-  border-right: 1px solid @color8; /* Add a separator line */
-  transition: background-color 0.6s ease, color 0.6s ease;
+
+#tray > .needs-attention {
+  background: @color1;
+  border-radius: 6px;
 }
-#battery,
-#pulseaudio,
-#backlight,
-#custom-pacman,
+
+/* ============================================
+   ICON-ONLY MODULES
+   ============================================ */
 #network,
 #bluetooth,
-#clock,
-#custom-weather,
-#custom-media,
-#window,
-#cpu,
-#memory,
-#disk,
-#tray,
-#custom-launcher,
-#custom-notification,
 #power-profiles-daemon {
-  font-family: "FiraCode Nerd Font", "JetBrainsMono Nerd Font Propo", "Noto Sans", sans-serif;
-  color: @foreground;
-  background-color: @background;
-  padding: 0 15px 0 15px;
-  margin: 0 6px;
-  transition: background-color 0.6s ease, color 0.6s ease;
+  padding-left: 0;
+  padding-right: 0;
+  min-width: 40px;
 }
-/* Custom Power Button */
-#custom-poweroff {
-  color: @foreground;
-  background-color: @background;
-  padding: 0 15px 0 15px;
-  margin: 0 6px;
-  transition: background-color 0.6s ease, color 0.6s ease;
-}
-#custom-poweroff:hover {
-  background-color: @color9;
-  color: @background;
-}
-/* Battery States */
-#battery.charging {
-  color: #4CAF50;
-}
-#battery.critical {
-  color: @color9;
-  animation: critical-blink 1s linear infinite;
-}
-#battery.warning {
+
+/* ============================================
+   MODULE COLORS
+   ============================================ */
+#power-profiles-daemon {
   color: @color3;
 }
-@keyframes critical-blink {
-  50% { opacity: 0.5; }
+
+#clock {
+  font-weight: bold;
 }
-/* Audio/Network Module Spacing */
-#pulseaudio,
-#backlight,
-#network,
+
+#cpu {
+  color: @color5;
+}
+
+#memory {
+  color: @color1;
+}
+
+#backlight {
+  color: @color3;
+}
+
 #bluetooth {
-  margin: 0 3px;
+  color: @color4;
 }
-#pulseaudio:hover,
-#backlight:hover,
-#network:hover,
-#bluetooth:hover {
-  background-color: @color1;
+
+#network {
+  color: @color6;
 }
-/* Window Module */
-#window {
-  transition: opacity 0.3s ease;
+
+#pulseaudio {
+  color: @color5;
 }
-#window.hidden {
-  opacity: 0;
-  min-width: 0;
-  min-height: 0;
-  padding: 0;
-  margin: 0;
-  border: none;
+
+#battery {
+  color: @color2;
 }
-window#waybar.empty #window {
-  background-color: transparent;
+
+#custom-notification {
+  color: @color3;
 }
-/* Network States */
-#network.disconnected {
-  color: @color9;
+
+#custom-poweroff {
+  color: @color1;
 }
-#network.wifi {
-  color: @foreground;
-}
-#bluetooth.off,
-#bluetooth.on,
+
+/* ============================================
+   MODULE STATES
+   ============================================ */
 #bluetooth.connected {
+  color: @color2;
+}
+
+#bluetooth.disabled,
+#bluetooth.off {
+  color: @color8;
+  opacity: 0.6;
+}
+
+#network.disconnected {
+  color: @color1;
+  opacity: 0.6;
+}
+
+#pulseaudio.muted {
+  color: @color8;
+  opacity: 0.6;
+}
+
+#battery.charging {
+  color: @color3;
+}
+
+#battery.warning:not(.charging) {
+  color: @color3;
+}
+
+#battery.critical:not(.charging) {
+  color: @color1;
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+tooltip {
+  background: transparent;
+}
+
+tooltip label {
+  background: @background;
+  border-radius: 8px;
   color: @foreground;
-}
-/* CPU and Memory */
-#cpu.warning {
-  color: @color3;
-}
-#cpu.critical {
-  color: @color9;
-}
-#memory.warning {
-  color: @color3;
-}
-#memory.critical {
-  color: @color9;
-}
-/* Clock hover effect */
-#clock:hover {
-  background-color: @color1;
-  color: @background;
-}
-/* Tray */
-#tray > .passive {
-  -gtk-icon-effect: dim;
-}
-#tray > .needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: @color9;
+  padding: 5px;
 }

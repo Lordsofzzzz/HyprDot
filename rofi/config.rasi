@@ -1,0 +1,95 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    display-drun: "  Apps";
+    display-run: "  Run";
+    display-window: "  Windows";
+    font: "JetBrainsMono Nerd Font 10";
+    drun-display-format: "{name}";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+}
+
+@import "~/.cache/wal/colors-rofi-dark.rasi"
+
+* {
+    border-color: @selected-normal-background;
+    separator-color: @selected-normal-background;
+}
+
+window {
+    width: 25%;
+    padding: 12px;
+    border: 1px;
+    border-radius: 10px;
+    background-color: @background;
+}
+
+mainbox {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+}
+
+inputbar {
+    spacing: 10px;
+    padding: 10px;
+    background-color: @normal-background;
+    border: 1px;
+    border-color: @selected-normal-background;
+    border-radius: 6px;
+    margin: 0px 0px 10px 0px;
+    children: [prompt, entry];
+}
+
+prompt {
+    text-color: @selected-normal-background;
+    font: "JetBrainsMono Nerd Font Bold 10";
+}
+
+entry {
+    text-color: @foreground;
+    placeholder: "Search...";
+    placeholder-color: @alternate-normal-foreground;
+}
+
+listview {
+    lines: 7;
+    spacing: 5px;
+    padding: 5px 0px;
+    scrollbar: false;
+    background-color: transparent;
+}
+
+element {
+    padding: 8px;
+    border-radius: 6px;
+    background-color: transparent;
+}
+
+element-text {
+    text-color: @foreground;
+    background-color: transparent;
+}
+
+element.selected {
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
+}
+
+element.selected element-text {
+    text-color: @selected-normal-foreground;
+}
+
+element-icon {
+    size: 24;
+    padding: 0px 10px 0px 0px;
+    background-color: transparent;
+}
+
+scrollbar {
+    handle-width: 6px;
+    handle-color: @selected-normal-background;
+    border-radius: 4px;
+    background-color: @normal-background;
+}

@@ -1,0 +1,154 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 5,
+  "margin-right": 5,
+  "height": 38,
+  "modules-left": [
+    "hyprland/workspaces",
+    "power-profiles-daemon"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "memory",
+    "backlight",
+    "bluetooth",
+    
+    "network",
+    "pulseaudio",
+    "battery",
+    "custom/notification",
+    "custom/poweroff"
+  ],
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "format-performance": " 󰓅 ",
+    "format-balanced": " 󰾅 ",
+    "format-power-saver": " 󰾆 ",
+    "format-icons": {
+      "performance": "󰓅",
+      "balanced": "󰾅",
+      "power-saver": "󰾆"
+    },
+    "tooltip": true,
+    "tooltip-format": "Power Profile: {profile}",
+    "on-click": "/home/{USRNAME}/.config/scripts/cycle_power_profile.sh"
+  },
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10",
+      "default": ""
+    },
+    "persistent-workspaces": {
+      "*": 5
+    },
+    "sort-by-number": true
+  },
+  "clock": {
+    "format": "󰥔 {:%a | %d-%m-%y}",
+    "tooltip-format": "{:%A | %d-%m-%Y}"
+  },
+  "battery": {
+    "interval": 1,
+    "states": {
+      "good": 90,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-discharging": "{icon} {capacity}%",
+    "format-full": "󱈑 {capacity}%",
+    "format-alt": "{time}",
+    "format-icons": [
+      "󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", 
+      "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "󰂯 {volume}%",
+    "format-muted": "󰖁",
+    "scroll-step": 1,
+    "on-click": "pavucontrol",
+    "ignored-sinks": ["Easy Effects Sink"],
+    "tooltip-format": "Volume: {volume}%",
+    "format-icons": {
+      "headphone": "󰋋",
+      "hands-free": "󰏳",
+      "headset": "󰋎",
+      "phone": "󰏲",
+      "portable": "󰦧",
+      "car": "󰄋",
+      "default": ["󰕿", "󰖀", "󰕾"]
+    }
+  },
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"]
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-on": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "Bluetooth: {status}",
+    "tooltip-format-connected": "Connected to {device_alias}",
+    "on-click": "blueberry",
+    "on-click-right": "bluetoothctl power toggle"
+  },
+  "network": {
+    "interface": "wlan0",
+    "interval": 1,
+    "format": "{ifname}",
+    "format-wifi": "{icon} {bandwidthDownBytes}",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤮",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "tooltip-format": "Connected to {essid}",
+    "tooltip-format-disconnected": "Disconnected",
+    "max-length": 50,
+    "on-click": "kitty -e ~/.config/waybar/scripts/nmtui.sh"
+  },
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true,
+    "format-icons": {
+      "notification": "󰂚",
+      "none": "󰂜",
+      "dnd-notification": "󰂛",
+      "dnd-none": "󰪑",
+      "inhibited-notification": "󰂚",
+      "inhibited-none": "󰂜",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    }
+  },
+  "custom/poweroff": {
+    "format": "󰐥",
+    "tooltip": "Power Off",
+    "on-click": "systemctl poweroff"
+  }
+}
