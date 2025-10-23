@@ -1,9 +1,7 @@
 /* ============================================
    WAYBAR CONFIGURATION STYLESHEET
    ============================================ */
-
 @import url("/home/lord/.cache/wal/colors-waybar.css");
-
 /* ============================================
    GLOBAL SETTINGS
    ============================================ */
@@ -14,11 +12,9 @@
   font-size: 15px;
   min-height: 0;
 }
-
 window#waybar {
   background: transparent;
 }
-
 /* ============================================
    BASE MODULE STYLING
    ============================================ */
@@ -35,14 +31,13 @@ window#waybar {
 #tray,
 #custom-notification,
 #custom-poweroff {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.85);
   color: @foreground;
   margin: 7px 4px;
   padding: 2px 14px;
   border-radius: 12px;
   transition: background-color 0.3s ease;
 }
-
 #power-profiles-daemon:hover,
 #clock:hover,
 #cpu:hover,
@@ -55,16 +50,14 @@ window#waybar {
 #tray:hover,
 #custom-notification:hover,
 #custom-poweroff:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.95);
 }
-
 /* ============================================
    WORKSPACES MODULE
    ============================================ */
 #workspaces {
   padding: 0px 5px;
 }
-
 #workspaces button {
   padding: 0px 5px;
   margin: 4px 2px;
@@ -73,39 +66,36 @@ window#waybar {
   min-height: 8px;
   color: transparent;
   background: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   box-shadow: none;
   text-shadow: none;
   outline: none;
 }
-
 #workspaces button:hover {
   background: rgba(255, 255, 255, 0.5);
 }
-
 #workspaces button.active {
   background: @color4;
   min-width: 24px;
   border-radius: 12px;
+  margin: 4px 0px;
 }
-
 #workspaces button.urgent {
   background: @color1;
 }
-
 /* ============================================
    TRAY MODULE
    ============================================ */
 #tray {
   padding: 2px 8px;
 }
-
 #tray > .needs-attention {
   background: @color1;
   border-radius: 6px;
 }
-
 /* ============================================
    ICON-ONLY MODULES
    ============================================ */
@@ -116,96 +106,76 @@ window#waybar {
   padding-right: 0;
   min-width: 40px;
 }
-
 /* ============================================
    MODULE COLORS
    ============================================ */
 #power-profiles-daemon {
   color: @color3;
 }
-
 #clock {
   font-weight: bold;
 }
-
 #cpu {
   color: @color5;
 }
-
 #memory {
   color: @color1;
 }
-
 #backlight {
   color: @color3;
 }
-
 #bluetooth {
   color: @color4;
 }
-
 #network {
   color: @color6;
 }
-
 #pulseaudio {
   color: @color5;
 }
-
 #battery {
   color: @color2;
 }
-
 #custom-notification {
   color: @color3;
 }
-
 #custom-poweroff {
   color: @color1;
 }
-
 /* ============================================
    MODULE STATES
    ============================================ */
 #bluetooth.connected {
   color: @color2;
 }
-
 #bluetooth.disabled,
 #bluetooth.off {
   color: @color8;
   opacity: 0.6;
 }
-
 #network.disconnected {
   color: @color1;
   opacity: 0.6;
 }
-
 #pulseaudio.muted {
   color: @color8;
   opacity: 0.6;
 }
-
 #battery.charging {
   color: @color3;
 }
-
 #battery.warning:not(.charging) {
   color: @color3;
 }
-
 #battery.critical:not(.charging) {
   color: @color1;
 }
-
 /* ============================================
    TOOLTIPS
    ============================================ */
 tooltip {
   background: transparent;
 }
-
 tooltip label {
   background: @background;
   border-radius: 8px;
