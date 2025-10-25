@@ -27,27 +27,15 @@
     "custom/notification",
     "custom/poweroff"
   ],
-
   "hyprland/workspaces": {
-    "format": "{icon}",
+    "format": "",
     "on-click": "activate",
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "urgent": "",
-      "active": "",
-      "default": ""
-    },
     "persistent-workspaces": {
       "*": 5
     },
     "all-outputs": true,
     "sort-by-number": true
   },
-
   "power-profiles-daemon": {
     "format": "{icon}",
     "tooltip": true,
@@ -60,13 +48,11 @@
       "default": "󰾅"
     }
   },
-
   "tray": {
     "icon-size": 18,
     "spacing": 8,
     "show-passive-items": false
   },
-
   "clock": {
     "interval": 1,
     "format": "󰥔 {:%a %d | %I:%M %p}",
@@ -91,21 +77,18 @@
       "on-scroll-down": "shift_down"
     }
   },
-
   "cpu": {
     "interval": 2,
     "format": " {usage}%",
     "tooltip-format": "CPU: {usage}%\nLoad: {load}",
     "max-length": 10
   },
-
   "memory": {
     "interval": 5,
     "format": "󰍛 {}%",
     "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
     "max-length": 10
   },
-
   "backlight": {
     "device": "intel_backlight",
     "format": "{icon} {percent}%",
@@ -114,7 +97,6 @@
     "on-scroll-down": "brightnessctl set 5%-",
     "tooltip-format": "Brightness: {percent}%"
   },
-
   "bluetooth": {
     "format": "󰂯",
     "format-on": "󰂯",
@@ -129,7 +111,6 @@
     "on-click": "blueberry",
     "on-click-right": "bluetoothctl power toggle"
   },
-
   "network": {
     "interval": 2,
     "format-wifi": "󰖩",
@@ -141,7 +122,6 @@
     "max-length": 50,
     "on-click": "nm-connection-editor"
   },
-
   "pulseaudio": {
     "format": "{icon} {volume}%",
     "format-bluetooth": "󰂯 {volume}%",
@@ -161,7 +141,6 @@
       "default": ["󰕿", "󰖀", "󰕾"]
     }
   },
-
   "battery": {
     "interval": 10,
     "states": {
@@ -180,7 +159,6 @@
       "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
     ]
   },
-
   "custom/notification": {
     "tooltip": false,
     "format": "{icon}",
@@ -201,7 +179,6 @@
       "dnd-inhibited-none": "󰪑"
     }
   },
-
   "custom/poweroff": {
     "format": "󰐥",
     "tooltip": "Power Menu",
