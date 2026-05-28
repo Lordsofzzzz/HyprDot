@@ -119,7 +119,7 @@ Scope {
             height: Math.min(580, contentCol.implicitHeight + 32)
             radius: 12
             color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.95)
-            border.color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
+            border.color: Colors.accent
             border.width: 1
 
             MouseArea {
