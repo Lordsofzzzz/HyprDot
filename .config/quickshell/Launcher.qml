@@ -109,10 +109,12 @@ Scope {
         // ── UI ────────────────────────────────────────────────────
         Rectangle {
             anchors.centerIn: parent
-            width: 420
+            width: 520
             height: 480
-            radius: 6
-            color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.97)
+            radius: 12
+            color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.95)
+            border.color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
+            border.width: 1
 
             MouseArea {
                 anchors.fill: parent
