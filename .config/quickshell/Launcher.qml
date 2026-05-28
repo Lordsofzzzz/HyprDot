@@ -74,10 +74,10 @@ Scope {
             anchors.centerIn: parent
             width: 420
             height: 480
-            radius: 10
+            radius: 6
             color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.97)
             border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.5)
-            border.width: 3
+            border.width: 2
 
             ColumnLayout {
                 anchors {
@@ -90,7 +90,7 @@ Scope {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 44
-                    radius: 6
+                    radius: 4
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.05)
 
                     RowLayout {
@@ -165,7 +165,7 @@ Scope {
                         required property int index
                         width: appList.width
                         height: 52
-                        radius: 10
+                        radius: 4
                         color: appList.currentIndex === index
                             ? Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
                             : "transparent"
