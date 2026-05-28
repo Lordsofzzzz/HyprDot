@@ -39,8 +39,6 @@ Scope {
         color: "transparent"
         surfaceFormat.opaque: false
 
-        BackgroundEffect.blurRegion: Region { item: launcher.contentItem }
-
         // Click outside to close
         MouseArea {
             anchors.fill: parent
