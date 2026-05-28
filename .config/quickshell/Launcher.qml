@@ -37,7 +37,6 @@ Scope {
         }
 
         color: "transparent"
-        surfaceFormat.opaque: false
 
         // Click outside to close
         MouseArea {
@@ -76,8 +75,8 @@ Scope {
             width: 420
             height: 480
             radius: 10
-            color: Qt.rgba(0, 0, 0, 0.95)
-            border.color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.08)
+            color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.97)
+            border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.3)
             border.width: 2
 
             ColumnLayout {
