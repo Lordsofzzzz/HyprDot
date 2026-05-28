@@ -218,15 +218,7 @@ Scope {
                                     elide: Text.ElideRight
                                     Behavior on color { ColorAnimation { duration: 100 } }
                                 }
-                                Text {
-                                    Layout.fillWidth: true
-                                    visible: modelData.genericName.length > 0
-                                    text: modelData.genericName
-                                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.45)
-                                    font.family: "FiraCode Nerd Font"
-                                    font.pixelSize: 11
-                                    elide: Text.ElideRight
-                                }
+
                             }
                         }
 
