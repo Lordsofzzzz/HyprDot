@@ -37,15 +37,14 @@ Scope {
         }
 
         color: "transparent"
+        surfaceFormat.opaque: false
 
-        // Dimmer background — click to close
-        Rectangle {
+        BackgroundEffect.blurRegion: Region { item: launcher.contentItem }
+
+        // Click outside to close
+        MouseArea {
             anchors.fill: parent
-            color: Qt.rgba(0, 0, 0, 0.4)
-            MouseArea {
-                anchors.fill: parent
-                onClicked: launcher.visible = false
-            }
+            onClicked: launcher.visible = false
         }
 
         onVisibleChanged: if (visible) { searchField.text = ""; searchField.forceActiveFocus() }
@@ -78,10 +77,10 @@ Scope {
             anchors.centerIn: parent
             width: 420
             height: 480
-            radius: 16
-            color: Colors.bg
-            border.color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
-            border.width: 1
+            radius: 10
+            color: Qt.rgba(0, 0, 0, 0.95)
+            border.color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.08)
+            border.width: 2
 
             ColumnLayout {
                 anchors {
@@ -94,12 +93,8 @@ Scope {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 44
-                    radius: 12
+                    radius: 6
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.05)
-                    border.color: searchField.activeFocus ? Colors.accent : "transparent"
-                    border.width: 1
-                    
-                    Behavior on border.color { ColorAnimation { duration: 150 } }
 
                     RowLayout {
                         anchors { fill: parent; leftMargin: 14; rightMargin: 14 }
@@ -175,7 +170,7 @@ Scope {
                         height: 52
                         radius: 10
                         color: appList.currentIndex === index
-                            ? Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.12)
+                            ? Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
                             : "transparent"
 
                         Behavior on color { ColorAnimation { duration: 100 } }
@@ -211,12 +206,11 @@ Scope {
                                 Text {
                                     Layout.fillWidth: true
                                     text: modelData.name
-                                    color: appList.currentIndex === index ? Colors.accent : Colors.fg
+                                    color: Colors.fg
                                     font.family: "FiraCode Nerd Font"
                                     font.pixelSize: 14
-                                    font.weight: appList.currentIndex === index ? Font.Bold : Font.Normal
+                                    font.weight: Font.Normal
                                     elide: Text.ElideRight
-                                    Behavior on color { ColorAnimation { duration: 100 } }
                                 }
 
                             }
