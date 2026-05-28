@@ -124,7 +124,7 @@ hl.device({ name = "epic-mouse-v1", sensitivity = -0.5 })
 local mainMod = "SUPER"
 
 -- App launcher
-hl.bind(mainMod .. " + space", hl.dsp.global("quickshell:launcher"))
+hl.bind("ALT + space", hl.dsp.global("quickshell:launcher"))
 hl.bind(mainMod .. " + W",     hl.dsp.global("quickshell:wifi"))
 
 -- Screenshots (grim + slurp)
