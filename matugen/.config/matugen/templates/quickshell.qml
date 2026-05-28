@@ -5,7 +5,7 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    readonly property color bg: "{{colors.surface.default.hex | set_lightness: 3.0}}"
+    readonly property color bg: "{{colors.surface.default.hex}}"
     readonly property color fg: "{{colors.on_surface.default.hex}}"
     readonly property color accent: "{{colors.primary.default.hex}}"
     readonly property color dim: "{{colors.on_surface_variant.default.hex}}"
