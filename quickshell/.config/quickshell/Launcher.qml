@@ -31,11 +31,6 @@ Scope {
         WlrLayershell.namespace: "launcher"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-        ShortcutInhibitor {
-            window: launcher
-            enabled: launcher.visible
-        }
-
         color: "transparent"
 
         // Click outside to close
