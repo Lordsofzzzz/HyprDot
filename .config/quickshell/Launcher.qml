@@ -76,8 +76,8 @@ Scope {
             height: 480
             radius: 10
             color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.97)
-            border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.3)
-            border.width: 2
+            border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.5)
+            border.width: 3
 
             ColumnLayout {
                 anchors {
