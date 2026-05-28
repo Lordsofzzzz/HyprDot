@@ -273,34 +273,31 @@ ShellRoot {
                             font.pixelSize: 15
                             leftPadding: 7.5; rightPadding: 7.5
 
-                            readonly property real maxVal: {
-                                const m = maxFile.text().trim()
-                                return m ? parseInt(m) : 1
-                            }
-                            readonly property real curVal: {
-                                const c = curFile.text().trim()
-                                return c ? parseInt(c) : 0
-                            }
-                            property int pct: Math.round(curVal / maxVal * 100)
+                            property int pct: 0
 
                             text: pct < 1 ? ""
                                 : pct < 34 ? "󰃞 " + pct + "%"
                                 : pct < 67 ? "󰃟 " + pct + "%"
                                 :             "󰃠 " + pct + "%"
 
-                            FileView { id: maxFile; path: "/sys/class/backlight/intel_backlight/max_brightness"; blockLoading: true }
-                            FileView {
-                                id: curFile
-                                path: "/sys/class/backlight/intel_backlight/brightness"
-                                watchChanges: true
-                                onFileChanged: this.reload()
+                            Process {
+                                id: readBrightProc
+                                command: ["brightnessctl", "-m"]
+                                running: true
+                                stdout: StdioCollector {
+                                    onStreamFinished: {
+                                        const parts = this.text.trim().split(",")
+                                        if (parts.length >= 4)
+                                            backlightText.pct = parseInt(parts[3].replace("%", "")) || 0
+                                    }
+                                }
                             }
 
                             Process {
-                                command: ["brightnessctl", "monitor"]
+                                command: ["sh", "-c", "udevadm monitor --subsystem-match=backlight --udev"]
                                 running: true
                                 stdout: SplitParser {
-                                    onRead: data => curFile.reload()
+                                    onRead: readBrightProc.running = true
                                 }
                             }
 
@@ -313,7 +310,12 @@ ShellRoot {
                                     brightnessAdj.running = true
                                 }
                             }
-                            Process { id: brightnessAdj }
+                            Process {
+                                id: brightnessAdj
+                                onRunningChanged: {
+                                    if (!running) readBrightProc.running = true
+                                }
+                            }
                         }
                     }
                 }
