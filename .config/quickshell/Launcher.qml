@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 import Quickshell.Wayland
 
@@ -32,6 +31,11 @@ Scope {
         WlrLayershell.namespace: "launcher"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
+        ShortcutInhibitor {
+            window: launcher
+            enabled: launcher.visible
+        }
+
         color: "transparent"
 
         // Dimmer background — click to close
@@ -46,49 +50,26 @@ Scope {
 
         onVisibleChanged: if (visible) { searchField.text = ""; searchField.forceActiveFocus() }
 
-        // ── App data ─────────────────────────────────────────────
-        property var allApps: []
+        // ── App data — uses Quickshell's built-in desktop entry index ──
+        readonly property var allApps: DesktopEntries.applications.values
 
-        Process {
-            id: appScanner
-            command: ["sh", "-c",
-                "grep -rl --include='*.desktop' 'Type=Application' " +
-                "/usr/share/applications ~/.local/share/applications 2>/dev/null " +
-                "| xargs grep -L 'NoDisplay=true' 2>/dev/null " +
-                "| while read f; do " +
-                "  name=$(grep '^Name=' \"$f\" | head -1 | cut -d= -f2-); " +
-                "  exec=$(grep '^Exec=' \"$f\" | head -1 | cut -d= -f2- | sed 's/ %[uUfF]//g'); " +
-                "  icon=$(grep '^Icon=' \"$f\" | head -1 | cut -d= -f2-); " +
-                "  [ -n \"$name\" ] && [ -n \"$exec\" ] && echo \"$name|$exec|$icon\"; " +
-                "done | sort -u"
-            ]
-            stdout: StdioCollector {
-                onStreamFinished: {
-                    var apps = []
-                    var lines = this.text.trim().split("\n")
-                    for (var i = 0; i < lines.length; i++) {
-                        var parts = lines[i].split("|")
-                        if (parts.length >= 2 && parts[0].length > 0)
-                            apps.push({ name: parts[0], exec: parts[1], icon: parts[2] || "" })
-                    }
-                    launcher.allApps = apps
-                }
-            }
-        }
-
-        Component.onCompleted: appScanner.running = true
-
-        // ── Filtered model ────────────────────────────────────────
+        // ── Filtered model with ScriptModel for delegate reuse ─────
         property string query: ""
-        property var filtered: {
+        readonly property var _filtered: {
             if (query.length === 0) return allApps.slice(0, 10)
             var q = query.toLowerCase()
-            return allApps.filter(a => a.name.toLowerCase().indexOf(q) !== -1).slice(0, 10)
+            return allApps.filter(a =>
+                a.name.toLowerCase().indexOf(q) !== -1 ||
+                a.genericName.toLowerCase().indexOf(q) !== -1 ||
+                a.keywords.some(k => k.toLowerCase().indexOf(q) !== -1)
+            ).slice(0, 10)
         }
 
+        ScriptModel { id: appModel; values: launcher._filtered }
+
         // ── Launch helper ─────────────────────────────────────────
-        function launch(exec) {
-            Quickshell.execDetached(["sh", "-c", exec])
+        function launch(entry) {
+            Quickshell.execDetached(entry.command)
             launcher.visible = false
         }
 
@@ -156,8 +137,8 @@ Scope {
                                     appList.currentIndex++
                             }
                             Keys.onReturnPressed: {
-                                var app = launcher.filtered[appList.currentIndex]
-                                if (app) launcher.launch(app.exec)
+                                var app = appModel.values[appList.currentIndex]
+                                if (app) launcher.launch(app)
                             }
                         }
 
@@ -181,7 +162,7 @@ Scope {
                     id: appList
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    model: launcher.filtered
+                    model: appModel
                     currentIndex: 0
                     clip: true
                     spacing: 4
@@ -208,16 +189,16 @@ Scope {
                                 width: 32; height: 32
                                 Image {
                                     anchors.fill: parent
-                                    source: modelData.icon.startsWith("/")
-                                        ? modelData.icon
-                                        : "image://icon/" + modelData.icon
+                                    source: modelData.icon
+                                        ? "image://icon/" + modelData.icon
+                                        : ""
                                     sourceSize: Qt.size(32, 32)
                                     smooth: true
                                     visible: status === Image.Ready
                                 }
                                 Text {
                                     anchors.centerIn: parent
-                                    visible: parent.children[0].status !== Image.Ready
+                                    visible: modelData.icon.length === 0 || parent.children[0].status !== Image.Ready
                                     text: "󰘔"
                                     font.family: "FiraCode Nerd Font"
                                     font.pixelSize: 24
@@ -237,6 +218,15 @@ Scope {
                                     elide: Text.ElideRight
                                     Behavior on color { ColorAnimation { duration: 100 } }
                                 }
+                                Text {
+                                    Layout.fillWidth: true
+                                    visible: modelData.genericName.length > 0
+                                    text: modelData.genericName
+                                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.45)
+                                    font.family: "FiraCode Nerd Font"
+                                    font.pixelSize: 11
+                                    elide: Text.ElideRight
+                                }
                             }
                         }
 
@@ -244,7 +234,7 @@ Scope {
                             anchors.fill: parent
                             hoverEnabled: true
                             onEntered: appList.currentIndex = index
-                            onClicked: launcher.launch(modelData.exec)
+                            onClicked: launcher.launch(modelData)
                         }
                     }
 
