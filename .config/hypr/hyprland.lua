@@ -125,6 +125,7 @@ local mainMod = "SUPER"
 
 -- App launcher
 hl.bind(mainMod .. " + space", hl.dsp.global("quickshell:launcher"))
+hl.bind(mainMod .. " + W",     hl.dsp.global("quickshell:wifi"))
 
 -- Screenshots (grim + slurp)
 hl.bind("Print",               hl.dsp.exec_cmd("grim"))

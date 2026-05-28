@@ -4,8 +4,8 @@
 opacity = 0.9
 
 [colors.primary]
-background = "#090608"
-foreground = "#eddfe4"
+background = "#090606"
+foreground = "#f1dedc"
 
 # Fixed ANSI palette — consistent readability regardless of wallpaper
 [colors.normal]

@@ -16,6 +16,7 @@ ShellRoot {
     id: root
 
     Launcher {}
+    Wifi {}
 
     property int cpuUsage: 0
 
