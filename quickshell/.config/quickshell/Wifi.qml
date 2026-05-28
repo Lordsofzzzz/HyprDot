@@ -33,11 +33,6 @@ Scope {
         WlrLayershell.namespace: "wifi-panel"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-        ShortcutInhibitor {
-            window: wifiPanel
-            enabled: wifiPanel.visible
-        }
-
         property var wifiDevice: {
             var devs = Networking.devices.values
             for (var i = 0; i < devs.length; i++) {
