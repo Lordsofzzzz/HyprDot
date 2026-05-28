@@ -106,14 +106,10 @@ Scope {
             onTriggered: toggleRow.forceActiveFocus()
         }
 
-        // Dim background — click outside closes
-        Rectangle {
+        // Click outside to close
+        MouseArea {
             anchors.fill: parent
-            color: Qt.rgba(0, 0, 0, 0.4)
-            MouseArea {
-                anchors.fill: parent
-                onClicked: wifiPanel.visible = false
-            }
+            onClicked: wifiPanel.visible = false
         }
 
         // ── Main panel ───────────────────────────────────────────
