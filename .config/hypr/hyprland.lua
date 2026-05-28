@@ -125,11 +125,10 @@ local mainMod = "SUPER"
 -- App launcher
 hl.bind(mainMod .. " + space", hl.dsp.global("quickshell:launcher"))
 
--- Screenshots
-hl.bind("Print",               hl.dsp.exec_cmd("hyprshot -m region"))
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m window"))
--- Note: SHIFT+Print may overlap with Print in some environments
-hl.bind("SHIFT + Print",       hl.dsp.exec_cmd("hyprshot -m output"))
+-- Screenshots (grim + slurp)
+hl.bind("Print",               hl.dsp.exec_cmd("grim"))
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("grim -g \"$(slurp)\""))
+hl.bind("SHIFT + Print",       hl.dsp.exec_cmd("grim -g \"$(slurp -o)\""))
 
 -- Core
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("alacritty"))
