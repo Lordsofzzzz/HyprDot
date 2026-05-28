@@ -1,9 +1,12 @@
 -- ~/.config/hypr/keybinds.lua
 local mainMod = "SUPER"
 
+-- Launch terminal
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("alacritty"))
+
 -- App launcher
-hl.bind("ALT + space", hl.dsp.global("quickshell:launcher"))
-hl.bind(mainMod .. " + W",     hl.dsp.global("quickshell:wifi"))
+hl.bind(mainMod .. " + D", hl.dsp.global("quickshell:launcher"))
+hl.bind(mainMod .. " + W", hl.dsp.global("quickshell:wifi"))
 
 -- Screenshots (grim + slurp)
 hl.bind("Print",               hl.dsp.exec_cmd("grim"))
@@ -11,13 +14,13 @@ hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("grim -g \"$(slurp)\""))
 hl.bind("SHIFT + Print",       hl.dsp.exec_cmd("grim -g \"$(slurp -o)\""))
 
 -- Core
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("alacritty"))
-hl.bind(mainMod .. " + C", hl.dsp.window.close())
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("nautilus"))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
+hl.bind(mainMod .. " + Q",              hl.dsp.window.close())
+hl.bind(mainMod .. " + F",              hl.dsp.window.fullscreen({ action = "toggle" }))
+hl.bind(mainMod .. " + SHIFT + Q",      hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
+hl.bind(mainMod .. " + E",              hl.dsp.exec_cmd("nautilus"))
+hl.bind(mainMod .. " + V",              hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + P",              hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + J",              hl.dsp.layout("togglesplit"))
 
 -- Focus
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "l" }))

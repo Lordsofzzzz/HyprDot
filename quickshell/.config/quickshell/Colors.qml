@@ -6,9 +6,9 @@ import Quickshell
 
 Singleton {
     readonly property color bg: "#1a1110"
-    readonly property color fg: "#f1dedc"
-    readonly property color accent: "#ffb4ab"
-    readonly property color accentText: "#561e19"
-    readonly property color dim: "#d8c2bf"
+    readonly property color fg: "#f1dfdb"
+    readonly property color accent: "#ffb4a5"
+    readonly property color accentText: "#561f14"
+    readonly property color dim: "#d8c2bd"
     readonly property color urgent: "#ffb4ab"
 }
