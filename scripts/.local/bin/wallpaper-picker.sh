@@ -16,7 +16,7 @@ apply() {
   pkill swaybg 2>/dev/null || true
   swaybg -i "$img" -m fill & disown
 
-  matugen image "$img" --prefer saturation
+  matugen image "$img" --source-color-index 0
 
   hyprctl reload 2>/dev/null || true
 
@@ -35,7 +35,7 @@ case "${1:-}" in
   --restore)
     if [ -L "$CURRENT_LINK" ] && [ -f "$(readlink "$CURRENT_LINK")" ]; then
       img="$(readlink "$CURRENT_LINK")"
-      matugen image "$img" --prefer saturation
+      matugen image "$img" --source-color-index 0
       pkill swaybg 2>/dev/null || true
       swaybg -i "$img" -m fill & disown
       hyprctl reload 2>/dev/null || true
