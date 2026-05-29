@@ -223,11 +223,7 @@ ShellRoot {
                                 : pct < 67 ? ("󰖀 " + pct + "%")
                                 :            ("󰕾 " + pct + "%")
 
-                            Process { id: pavuProc; command: ["pavucontrol"] }
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: pavuProc.running = true
-                            }
+
                         }
 
                         // CPU
