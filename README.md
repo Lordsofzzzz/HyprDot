@@ -24,13 +24,15 @@ git clone git@github.com:Lordsofzzzz/HyprDot.git ~/HyprDot
 cd ~/HyprDot
 
 # Deploy all packages
-stow hypr alacritty quickshell matugen scripts
+stow hypr alacritty quickshell matugen scripts gtk-3.0 gtk-4.0
 
 # Or deploy individually
 stow hypr        # Hyprland compositor config
 stow alacritty   # Terminal config
 stow quickshell  # Wayland shell (bar, launcher, wifi panel)
 stow matugen     # Material You theming config
+stow gtk-3.0     # GTK3 colors.css import
+stow gtk-4.0     # GTK4 colors.css import
 stow scripts     # Wallpaper picker → ~/.local/bin/
 ```
 
@@ -67,6 +69,13 @@ Material You theming engine — maps templates to output files:
 | `templates/quickshell.qml` | `~/.config/quickshell/Colors.qml` |
 | `templates/alacritty.toml` | `~/.config/alacritty/alacritty.toml` |
 | `templates/hyprland-colors.lua` | `~/.config/hypr/hyprland-colors.lua` |
+| `templates/gtk-colors.css` | `~/.config/gtk-3.0/colors.css` + `~/.config/gtk-4.0/colors.css` |
+
+### `gtk-3.0/` & `gtk-4.0/`
+
+Each package contains a single `gtk.css` that imports the generated `colors.css`. The `colors.css` file (output by matugen) defines libadwaita/GTK named colors — accent, window, headerbar, popover, view, and card surfaces.
+
+GTK3 includes a `post_hook` that reloads the theme via `gsettings` so changes take effect immediately. GTK4 picks up `colors.css` changes at runtime automatically.
 
 Regenerate colors after changing wallpaper:
 
@@ -74,7 +83,7 @@ Regenerate colors after changing wallpaper:
 matugen image ~/path/to/wallpaper --prefer saturation
 ```
 
-Then reload Hyprland and restart Quickshell (or use `wallpaper-picker.sh` which does all of this automatically).
+Then reload Hyprland, restart Quickshell, or run `wallpaper-picker.sh` which does all of this automatically.
 
 ### `scripts/`
 
