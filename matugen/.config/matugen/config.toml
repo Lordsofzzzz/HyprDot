@@ -6,7 +6,7 @@ output_path = "~/.config/quickshell/Colors.qml"
 
 [templates.alacritty]
 input_path  = "~/.config/matugen/templates/alacritty.toml"
-output_path = "~/.config/alacritty/alacritty.toml"
+output_path = "~/.config/alacritty/colors.toml"
 
 [templates.gtk3]
 input_path  = '~/.config/matugen/templates/gtk-colors.css'
