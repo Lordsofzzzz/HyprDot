@@ -48,10 +48,10 @@ Hyprland compositor config in Lua (revived API, not the legacy `hyprlang` format
 
 ### `quickshell/`
 
-Custom Wayland shell with system integration. Entry point: [`shell.qml`](quickshell/.config/quickshell/shell.qml)
+Custom Wayland shell with system integration. Entry point: [`shell.qml`](quickshell/shell.qml)
 
 ```
-quickshell/.config/quickshell/
+quickshell/
 ├── shell.qml              # entry point — wires everything together
 ├── Bar.qml                # per-screen panel window (anchored top bar)
 ├── Colors.qml             # generated color singleton (matugen)
