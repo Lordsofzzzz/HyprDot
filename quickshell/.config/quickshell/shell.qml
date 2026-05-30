@@ -16,6 +16,7 @@ ShellRoot {
 
     Launcher {}
     Wifi {}
+    Osd {}
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
