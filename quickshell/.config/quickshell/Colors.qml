@@ -5,9 +5,9 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    readonly property color bg: "#0e1415"
-    readonly property color fg: "#dee3e5"
-    readonly property color accent: "#82d3e0"
-    readonly property color dim: "#bfc8ca"
+    readonly property color bg: "#141318"
+    readonly property color fg: "#e6e1e9"
+    readonly property color accent: "#cbbeff"
+    readonly property color dim: "#c9c4cf"
     readonly property color urgent: "#ffb4ab"
 }
