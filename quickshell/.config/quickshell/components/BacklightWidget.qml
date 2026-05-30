@@ -8,8 +8,6 @@ Text {
     color: Colors.fg
     font.family: "FiraCode Nerd Font"
     font.pixelSize: 15
-    leftPadding: 7.5
-    rightPadding: 7.5
 
     property int pct: 0
 

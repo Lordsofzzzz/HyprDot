@@ -42,10 +42,10 @@ PanelWindow {
             Item { Layout.fillWidth: true }
 
             RowLayout {
-                spacing: 4
+                spacing: 16
 
                 RowLayout {
-                    spacing: 17
+                    spacing: 12
                     Repeater {
                         model: SystemTray.items
                         delegate: Image {
@@ -69,8 +69,8 @@ PanelWindow {
                 BluetoothWidget {}
                 NetworkWidget {}
                 AudioWidget {}
-                BatteryWidget {}
                 BacklightWidget {}
+                BatteryWidget {}
             }
         }
 
