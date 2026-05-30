@@ -69,6 +69,13 @@ PanelWindow {
                     }
                 }
 
+                Rectangle {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: 2
+                    height: 16
+                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
+                }
+
                 BluetoothWidget {}
                 NetworkWidget {}
                 AudioWidget {}
