@@ -39,6 +39,7 @@ PanelWindow {
             spacing: 0
 
             Workspaces { screen: bar.screen }
+            WindowTitle {}
 
             Item { Layout.fillWidth: true }
 
