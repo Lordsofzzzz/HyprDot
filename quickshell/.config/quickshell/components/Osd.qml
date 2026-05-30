@@ -97,18 +97,14 @@ Scope {
             anchors.bottom: true
             margins.bottom: 56
             exclusiveZone: 0
-            implicitWidth:  200
-            implicitHeight: 32
+            implicitWidth:  260
+            implicitHeight: 40
             color: "transparent"
             mask: Region {}
 
             Rectangle {
+                id: pillRect
                 anchors.fill: parent
-                anchors.leftMargin:  Math.round((parent.width - pillWidth) / 2)
-                anchors.rightMargin: Math.round((parent.width - pillWidth) / 2)
-
-                property int pillWidth: 200
-
                 radius: height / 2
                 color:  Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
                 border.width: 0
@@ -116,22 +112,22 @@ Scope {
                 RowLayout {
                     anchors {
                         fill:        parent
-                        leftMargin:  12
-                        rightMargin: 12
+                        leftMargin:  16
+                        rightMargin: 16
                     }
-                    spacing: 8
+                    spacing: 10
 
                     Text {
                         text:             root.osdIcon
                         font.family:      "FiraCode Nerd Font"
-                        font.pixelSize:   15
+                        font.pixelSize:   18
                         color:            Colors.accent
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     Rectangle {
                         Layout.fillWidth: true
-                        height:  3
+                        height:  4
                         radius:  2
                         border.width: 0
                         color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
@@ -155,9 +151,9 @@ Scope {
                     Text {
                         text:              root.osdLabel
                         font.family:       "FiraCode Nerd Font"
-                        font.pixelSize:    12
+                        font.pixelSize:    14
                         color:             Colors.dim
-                        Layout.minimumWidth: 30
+                        Layout.minimumWidth: 34
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment:   Text.AlignVCenter
                     }

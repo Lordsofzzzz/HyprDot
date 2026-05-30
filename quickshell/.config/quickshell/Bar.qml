@@ -29,7 +29,7 @@ PanelWindow {
         }
         height: 28
         radius: 4
-        color: Colors.bg
+        color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
 
         RowLayout {
             anchors {

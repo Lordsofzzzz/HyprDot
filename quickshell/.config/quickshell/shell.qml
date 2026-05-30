@@ -18,10 +18,6 @@ ShellRoot {
     Wifi {}
     Osd {}
 
-    PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
-    }
-
     Variants {
         model: Quickshell.screens
         Bar { screen: modelData }
