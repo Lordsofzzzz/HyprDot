@@ -13,8 +13,8 @@ PanelWindow {
     id: bar
     required property var screen
     anchors { top: true; left: true; right: true }
-    implicitHeight: 26 + 8
-    exclusiveZone: 26 + 8
+    implicitHeight: 28 + 8
+    exclusiveZone: 28 + 8
     color: "transparent"
 
     Rectangle {
@@ -26,7 +26,7 @@ PanelWindow {
             leftMargin: 10
             rightMargin: 10
         }
-        height: 26
+        height: 28
         color: Colors.bg
 
         RowLayout {
@@ -51,7 +51,7 @@ PanelWindow {
                         delegate: Image {
                             required property SystemTrayItem modelData
                             source: modelData.icon
-                            width: 12; height: 12
+                            width: 14; height: 14
                             smooth: true
 
                             MouseArea {

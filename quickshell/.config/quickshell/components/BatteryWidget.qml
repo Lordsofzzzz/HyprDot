@@ -5,7 +5,7 @@ import "../"
 
 Text {
     font.family: "FiraCode Nerd Font"
-    font.pixelSize: 15
+    font.pixelSize: 16
 
     property var dev:     UPower.displayDevice
     property int pct:     dev ? Math.round(dev.percentage * 100) : 0

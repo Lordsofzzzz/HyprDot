@@ -7,7 +7,7 @@ Text {
     anchors.centerIn: parent
     color: Colors.fg
     font.family: "FiraCode Nerd Font"
-    font.pixelSize: 15
+    font.pixelSize: 16
 
     property var now: new Date()
     text: "󰃰 " + Qt.formatDateTime(now, "hh:mm AP · ddd MMM dd")

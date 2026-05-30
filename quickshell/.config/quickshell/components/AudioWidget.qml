@@ -6,7 +6,7 @@ import "../"
 Text {
     color: Colors.fg
     font.family: "FiraCode Nerd Font"
-    font.pixelSize: 15
+    font.pixelSize: 16
 
     property var sink: Pipewire.defaultAudioSink
     property bool muted: sink && sink.ready && sink.audio ? sink.audio.muted : false
