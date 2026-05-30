@@ -1,16 +1,49 @@
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
 import "../"
 
-Text {
+Item {
     id: clock
     anchors.centerIn: parent
-    color: Colors.fg
-    font.family: "FiraCode Nerd Font"
-    font.pixelSize: 16
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
 
     property var now: new Date()
-    text: "󰃰 " + Qt.formatDateTime(now, "hh:mm AP · ddd MMM dd")
+
+    RowLayout {
+        id: layout
+        anchors.centerIn: parent
+        spacing: 4
+
+        Text {
+            text: "󰃰"
+            color: Colors.accent
+            font.family: "FiraCode Nerd Font"
+            font.pixelSize: 14
+        }
+
+        Text {
+            text: Qt.formatDateTime(clock.now, "HH:mm")
+            color: Colors.fg
+            font.family: "FiraCode Nerd Font"
+            font.pixelSize: 16
+            font.weight: Font.Bold
+        }
+
+        Text {
+            text: "•"
+            color: Colors.dim
+            font.pixelSize: 14
+        }
+
+        Text {
+            text: Qt.formatDateTime(clock.now, "ddd MMM dd")
+            color: Colors.fg
+            font.family: "FiraCode Nerd Font"
+            font.pixelSize: 12
+        }
+    }
 
     Timer {
         interval: 10000; running: true; repeat: true
