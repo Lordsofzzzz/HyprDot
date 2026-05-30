@@ -16,7 +16,6 @@ ShellRoot {
 
     Launcher {}
     Wifi {}
-    CpuMonitor { id: cpuMon }
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
@@ -24,6 +23,6 @@ ShellRoot {
 
     Variants {
         model: Quickshell.screens
-        Bar { screen: modelData; cpuUsage: cpuMon.cpuUsage }
+        Bar { screen: modelData }
     }
 }

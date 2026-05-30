@@ -12,8 +12,6 @@ import "components"
 PanelWindow {
     id: bar
     required property var screen
-    required property int cpuUsage
-
     anchors { top: true; left: true; right: true }
     implicitHeight: 26 + 8
     exclusiveZone: 26 + 8
@@ -71,7 +69,6 @@ PanelWindow {
                 BluetoothWidget {}
                 NetworkWidget {}
                 AudioWidget {}
-                CpuWidget { cpuUsage: bar.cpuUsage }
                 BatteryWidget {}
                 BacklightWidget {}
             }
