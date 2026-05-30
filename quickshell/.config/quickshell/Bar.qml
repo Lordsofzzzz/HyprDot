@@ -11,6 +11,7 @@ import "components"
 
 PanelWindow {
     id: bar
+    required property var modelData
     required property var screen
     anchors { top: true; left: true; right: true }
     implicitHeight: 28 + 8
