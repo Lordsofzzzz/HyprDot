@@ -72,6 +72,7 @@ PanelWindow {
                 BluetoothWidget {}
                 NetworkWidget {}
                 AudioWidget {}
+                MicMuteWidget {}
                 BacklightWidget {}
                 BatteryWidget {}
             }

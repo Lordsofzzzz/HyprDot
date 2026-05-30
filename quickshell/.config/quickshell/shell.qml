@@ -18,7 +18,7 @@ ShellRoot {
     Wifi {}
 
     PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink]
+        objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
     }
 
     Variants {

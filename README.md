@@ -59,8 +59,10 @@ quickshell/.config/quickshell/
 ├── Wifi.qml               # WiFi manager overlay (SUPER+W)
 └── components/
     ├── Workspaces.qml     # workspace indicators — dynamic visibility
+    ├── WindowTitle.qml    # active Hyprland window title
     ├── ClockWidget.qml    # date/time display
     ├── AudioWidget.qml    # PipeWire volume icon + percentage
+    ├── MicMuteWidget.qml  # mic mute indicator (hidden when unmuted)
     ├── BatteryWidget.qml  # UPower battery with charge thresholds
     ├── BacklightWidget.qml# brightnessctl read/write + udev monitor
     ├── BluetoothWidget.qml# adapter state icon (on/connected/off)
