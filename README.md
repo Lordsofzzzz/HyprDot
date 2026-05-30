@@ -64,8 +64,6 @@ quickshell/.config/quickshell/
     ├── BatteryWidget.qml  # UPower battery with charge thresholds
     ├── BacklightWidget.qml# brightnessctl read/write + udev monitor
     ├── BluetoothWidget.qml# adapter state icon (on/connected/off)
-    ├── CpuWidget.qml      # CPU usage display
-    ├── CpuMonitor.qml     # polling process — shared state (not per-screen)
     └── NetworkWidget.qml  # Wi-Fi / ethernet status icon
 ```
 
