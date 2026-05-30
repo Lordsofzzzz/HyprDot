@@ -27,6 +27,7 @@ PanelWindow {
             rightMargin: 10
         }
         height: 28
+        radius: 4
         color: Colors.bg
 
         RowLayout {
