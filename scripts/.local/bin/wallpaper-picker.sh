@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WALL_DIR="${WALL_DIR:-$HOME/Downloads}"
+WALL_DIR="${WALL_DIR:-$HOME/Pictures/wallpapers}"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper"
 CURRENT_LINK="$CACHE_DIR/current"
 mkdir -p "$CACHE_DIR"
