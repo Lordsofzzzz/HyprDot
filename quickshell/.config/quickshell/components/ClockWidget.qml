@@ -24,7 +24,7 @@ Item {
         }
 
         Text {
-            text: Qt.formatDateTime(clock.now, "HH:mm")
+            text: Qt.formatDateTime(clock.now, "h:mm AP")
             color: Colors.fg
             font.family: "FiraCode Nerd Font"
             font.pixelSize: 16
