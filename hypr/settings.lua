@@ -33,7 +33,22 @@ hl.config({
     misc       = {
         force_default_wallpaper = -1,
         disable_hyprland_logo   = true,
+        vrr                     = 2,
+        mouse_move_enables_dpms = true,
+        key_press_enables_dpms  = true,
     },
+})
+
+hl.config({
+    cursor = { no_hardware_cursors = true },
+})
+
+hl.config({
+    xwayland = { force_zero_scaling = true },
+})
+
+hl.config({
+    render = { direct_scanout = 2 },
 })
 
 hl.config({
