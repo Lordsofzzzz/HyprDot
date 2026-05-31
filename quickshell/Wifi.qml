@@ -50,9 +50,6 @@ Scope {
         property string statusMsg: ""
         property bool connecting: false
 
-        // Focus state: "toggle" | "list" | "password"
-        property string focusState: "toggle"
-
         function signalIcon(strength) {
             if (strength > 0.75) return "\uE4EA"
             if (strength > 0.50) return "\uE4EE"
@@ -88,7 +85,6 @@ Scope {
                 passwordText = ""
                 statusMsg = ""
                 connecting = false
-                focusState = "toggle"
                 focusTimer.start()
             }
         }
