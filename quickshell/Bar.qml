@@ -14,75 +14,78 @@ PanelWindow {
     required property var modelData
     required property var screen
     anchors { top: true; left: true; right: true }
-    implicitHeight: 28 + 8
-    exclusiveZone: 28 + 8
+    implicitHeight: Config.barHeight + Config.barOuterMargin
+    exclusiveZone: Config.barHeight + Config.barOuterMargin
     color: "transparent"
 
     Rectangle {
+        id: barBg
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
-            topMargin: 8
-            leftMargin: 10
-            rightMargin: 10
+            topMargin: Config.barOuterMargin
+            leftMargin: Config.barOuterMargin
+            rightMargin: Config.barOuterMargin
         }
-        height: 28
-        radius: 4
+        height: Config.barHeight
+        radius: Config.barRadius
         color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
 
         RowLayout {
             anchors {
                 fill: parent
-                leftMargin: 8
-                rightMargin: 8
+                leftMargin: Config.barInnerMargin
+                rightMargin: Config.barInnerMargin
             }
-            spacing: 0
+            spacing: Config.spacing
 
-            Workspaces { screen: bar.screen }
-            WindowTitle {}
+            Workspaces { screen: bar.screen; Layout.alignment: Qt.AlignVCenter }
+            WindowTitle { Layout.alignment: Qt.AlignVCenter }
 
             Item { Layout.fillWidth: true }
 
             RowLayout {
-                spacing: 16
+                spacing: Config.looseSpacing
+                Layout.alignment: Qt.AlignVCenter
+                Repeater {
+                    model: SystemTray.items
+                    delegate: Image {
+                        required property SystemTrayItem modelData
+                        Layout.alignment: Qt.AlignVCenter
+                        source: modelData.icon
+                        sourceSize.width: 14; sourceSize.height: 14
+                        width: 14; height: 14
+                        smooth: true
 
-                RowLayout {
-                    spacing: 12
-                    Repeater {
-                        model: SystemTray.items
-                        delegate: Image {
-                            required property SystemTrayItem modelData
-                            source: modelData.icon
-                            width: 14; height: 14
-                            smooth: true
-
-                            MouseArea {
-                                anchors.fill: parent
-                                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                                onClicked: mouse =>
-                                    mouse.button === Qt.RightButton
-                                        ? modelData.secondaryActivate(0, 0)
-                                        : modelData.activate(0, 0)
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: function(event) {
+                                if (event.button === Qt.RightButton && modelData.hasMenu) {
+                                    var pos = mapToItem(barBg, event.x, event.y)
+                                    modelData.display(bar, pos.x + barBg.x, pos.y + barBg.y)
+                                } else if (event.button !== Qt.RightButton)
+                                    modelData.activate()
                             }
                         }
                     }
                 }
-
-                Rectangle {
-                    Layout.alignment: Qt.AlignVCenter
-                    width: 2
-                    height: 16
-                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
-                }
-
-                BluetoothWidget {}
-                NetworkWidget {}
-                AudioWidget {}
-                MicMuteWidget {}
-                BacklightWidget {}
-                BatteryWidget {}
             }
+
+            Rectangle {
+                Layout.alignment: Qt.AlignVCenter
+                width: 2
+                height: 16
+                color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
+            }
+
+            BluetoothWidget { Layout.alignment: Qt.AlignVCenter }
+            NetworkWidget { Layout.alignment: Qt.AlignVCenter }
+            AudioWidget { Layout.alignment: Qt.AlignVCenter }
+            MicMuteWidget { Layout.alignment: Qt.AlignVCenter }
+            BacklightWidget { Layout.alignment: Qt.AlignVCenter }
+            BatteryWidget { Layout.alignment: Qt.AlignVCenter }
         }
 
         ClockWidget {}

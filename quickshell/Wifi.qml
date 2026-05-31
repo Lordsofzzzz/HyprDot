@@ -54,11 +54,11 @@ Scope {
         property string focusState: "toggle"
 
         function signalIcon(strength) {
-            if (strength > 0.75) return "󰤨"
-            if (strength > 0.50) return "󰤥"
-            if (strength > 0.25) return "󰤢"
-            if (strength > 0.0)  return "󰤟"
-            return "󰤯"
+            if (strength > 0.75) return "\uE4EA"
+            if (strength > 0.50) return "\uE4EE"
+            if (strength > 0.25) return "\uE4EC"
+            if (strength > 0.0)  return "\uE4F0"
+            return "\uE4F2"
         }
 
         function requiresPassword(net) {
@@ -131,12 +131,21 @@ Scope {
                 spacing: 12
 
                 // ── Header (no toggle switch) ─────────────────────
-                Text {
-                    text: "󰤨  WiFi"
-                    color: Colors.fg
-                    font.family: "FiraCode Nerd Font"
-                    font.pixelSize: 15
-                    font.weight: Font.Medium
+                RowLayout {
+                    spacing: 8
+                    Text {
+                        text: "\uE4EA"
+                        font.family: "Phosphor-Fill"
+                        font.pixelSize: 18
+                        color: Colors.fg
+                    }
+                    Text {
+                        text: "WiFi"
+                        color: Colors.fg
+                        font.family: "Inter"
+                        font.pixelSize: 15
+                        font.weight: Font.Medium
+                    }
                 }
 
                 // Divider
@@ -192,8 +201,8 @@ Scope {
                         spacing: 10
 
                         Text {
-                            text: Networking.wifiEnabled ? "󰤨" : "󰤭"
-                            font.family: "FiraCode Nerd Font"
+                            text: Networking.wifiEnabled ? "\uE4EA" : "\uE4F2"
+                            font.family: "Phosphor-Fill"
                             font.pixelSize: 16
                             color: Networking.wifiEnabled
                                 ? Colors.accent
@@ -204,7 +213,7 @@ Scope {
                             Layout.fillWidth: true
                             text: Networking.wifiEnabled ? "Turn WiFi Off" : "Turn WiFi On"
                             color: Networking.wifiEnabled ? Colors.fg : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.5)
-                            font.family: "FiraCode Nerd Font"
+                            font.family: "Inter"
                             font.pixelSize: 13
                         }
 
@@ -223,7 +232,7 @@ Scope {
                                 color: Networking.wifiEnabled
                                     ? Colors.accent
                                     : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
-                                font.family: "FiraCode Nerd Font"
+                                font.family: "Inter"
                                 font.pixelSize: 9
                                 font.weight: Font.Medium
                             }
@@ -233,7 +242,7 @@ Scope {
                         Text {
                             visible: toggleRow.activeFocus
                             text: "↵"
-                            font.family: "FiraCode Nerd Font"
+                            font.family: "Inter"
                             font.pixelSize: 11
                             color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
                         }
@@ -253,7 +262,7 @@ Scope {
                     visible: wifiPanel.statusMsg.length > 0
                     text: wifiPanel.statusMsg
                     color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.8)
-                    font.family: "FiraCode Nerd Font"
+                    font.family: "Inter"
                     font.pixelSize: 12
                     Layout.fillWidth: true
                 }
@@ -336,7 +345,7 @@ Scope {
                         visible: Networking.wifiEnabled && wifiPanel.networks.length === 0
                         text: "No networks found  (r to scan)"
                         color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
-                        font.family: "FiraCode Nerd Font"
+                        font.family: "Inter"
                         font.pixelSize: 13
                     }
 
@@ -368,9 +377,9 @@ Scope {
                                 }
                                 spacing: 10
 
-                                Text {
+                                 Text {
                                     text: wifiPanel.signalIcon(modelData.signalStrength)
-                                    font.family: "FiraCode Nerd Font"
+                                    font.family: "Phosphor-Fill"
                                     font.pixelSize: 16
                                     color: modelData.connected
                                         ? Colors.accent
@@ -381,24 +390,24 @@ Scope {
                                     Layout.fillWidth: true
                                     text: modelData.name
                                     color: modelData.connected ? Colors.accent : Colors.fg
-                                    font.family: "FiraCode Nerd Font"
+                                    font.family: "Inter"
                                     font.pixelSize: 13
                                     elide: Text.ElideRight
                                 }
 
                                 Text {
                                     visible: wifiPanel.requiresPassword(modelData)
-                                    text: "󰌾"
-                                    font.family: "FiraCode Nerd Font"
-                                    font.pixelSize: 12
+                                    text: "\uE2FE"
+                                    font.family: "Phosphor-Fill"
+                                    font.pixelSize: 14
                                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
                                 }
 
                                 Text {
                                     visible: modelData.connected
-                                    text: "󰄬"
-                                    font.family: "FiraCode Nerd Font"
-                                    font.pixelSize: 13
+                                    text: "\uE182"
+                                    font.family: "Phosphor-Fill"
+                                    font.pixelSize: 14
                                     color: Colors.accent
                                 }
                             }
@@ -459,7 +468,7 @@ Scope {
                                     id: passField
                                     Layout.fillWidth: true
                                     color: Colors.fg
-                                    font.family: "FiraCode Nerd Font"
+                                    font.family: "Inter"
                                     font.pixelSize: 13
                                     echoMode: TextInput.Password
                                     placeholderText: "Password"
@@ -494,7 +503,7 @@ Scope {
                                         anchors.centerIn: parent
                                         text: "↵ Connect"
                                         color: Colors.accent
-                                        font.family: "FiraCode Nerd Font"
+                                        font.family: "Inter"
                                         font.pixelSize: 10
                                     }
 
@@ -525,7 +534,7 @@ Scope {
                 Text {
                     text: "↑↓ navigate  ↵ select  t toggle  r rescan  esc close"
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.25)
-                    font.family: "FiraCode Nerd Font"
+                    font.family: "Inter"
                     font.pixelSize: 10
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter

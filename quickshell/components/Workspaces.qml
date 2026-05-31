@@ -8,7 +8,7 @@ import "../"
 RowLayout {
     id: wsRow
     required property var screen
-    spacing: 3
+    spacing: Config.tightSpacing
 
     Process { id: wsSwitch }
 
@@ -43,8 +43,8 @@ RowLayout {
                 anchors.centerIn: parent
                 visible: !isFocused && !isUrgent
                 text: index + 1
-                font.family: "FiraCode Nerd Font"
-                font.pixelSize: 13
+                font.family: "Inter"
+                font.pixelSize: Config.smallFontSize
                 color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, toplevelCount > 0 ? 0.6 : 0.25)
                 Behavior on color { ColorAnimation { duration: 120 } }
             }

@@ -1,3 +1,4 @@
+//@ pragma UseQApplication
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -9,6 +10,9 @@ import Quickshell.Networking
 import Quickshell.Services.Pipewire
 import Quickshell.Services.SystemTray
 import Quickshell.Services.UPower
+import Quickshell.Services.Notifications
+import Quickshell.Wayland
+import Quickshell.Widgets
 import "components"
 
 ShellRoot {
@@ -17,6 +21,7 @@ ShellRoot {
     Launcher {}
     Wifi {}
     Osd {}
+    NotificationPopup {}
 
     Variants {
         model: Quickshell.screens

@@ -39,8 +39,8 @@ case "${1:-}" in
       pkill swaybg 2>/dev/null || true
       swaybg -i "$img" -m fill & disown
       hyprctl reload 2>/dev/null || true
-      pkill quickshell 2>/dev/null || true
-      quickshell & disown
-    fi ;;
+    fi
+    pkill quickshell 2>/dev/null || true
+    quickshell & disown ;;
   *) apply "$1" ;;
 esac

@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
 import "../"
+import "../services"
 
 Scope {
     id: root
@@ -27,10 +28,10 @@ Scope {
         var muted = sink.audio.muted
         var vol   = sink.audio.volume
         var pct   = Math.round(vol * 100)
-        var icon  = muted    ? "󰝟"
-                  : pct < 34 ? "󰕿"
-                  : pct < 67 ? "󰖀"
-                  :             "󰕾"
+    var icon  = muted    ? "\uE45C"
+              : pct < 34 ? "\uE44E"
+              : pct < 67 ? "\uE44C"
+              :             "\uE44A"
         showOsd(icon, muted ? "mute" : pct + "%", muted ? 0 : vol)
     }
 
@@ -38,11 +39,7 @@ Scope {
         var source = Pipewire.defaultAudioSource
         if (!source || !source.audio) return
         var muted = source.audio.muted
-        showOsd(muted ? "󰍭" : "󰍬", muted ? "mic off" : "mic on", muted ? 0 : 1)
-    }
-
-    function showBrightnessOsd() {
-        brightReader.running = true
+        showOsd(muted ? "\uE328" : "\uE326", muted ? "mic off" : "mic on", muted ? 0 : 1)
     }
 
     PwObjectTracker {
@@ -63,25 +60,12 @@ Scope {
         function onMutedChanged() { showMicOsd() }
     }
 
-    Process {
-        id: brightReader
-        command: ["brightnessctl", "-m"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const parts = this.text.trim().split(",")
-                if (parts.length < 4) return
-                var pct = parseInt(parts[3].replace("%", "")) || 0
-                var icon = pct < 34 ? "󰃞"
-                         : pct < 67 ? "󰃟"
-                         :             "󰃠"
-                showOsd(icon, pct + "%", pct / 100)
-            }
+    Connections {
+        target: BrightnessService
+        function onChanged(pct) {
+            var icon = pct < 34 ? "\uE474" : "\uE472"
+            showOsd(icon, pct + "%", pct / 100)
         }
-    }
-
-    IpcHandler {
-        target: "osd"
-        function showBrightness(): void { root.showBrightnessOsd() }
     }
 
     Timer {
@@ -119,7 +103,7 @@ Scope {
 
                     Text {
                         text:             root.osdIcon
-                        font.family:      "FiraCode Nerd Font"
+                        font.family:      "Phosphor-Fill"
                         font.pixelSize:   18
                         color:            Colors.accent
                         verticalAlignment: Text.AlignVCenter
@@ -150,7 +134,7 @@ Scope {
 
                     Text {
                         text:              root.osdLabel
-                        font.family:       "FiraCode Nerd Font"
+                        font.family:       "Inter"
                         font.pixelSize:    14
                         color:             Colors.dim
                         Layout.minimumWidth: 34

@@ -6,11 +6,9 @@ import "../"
 Text {
     text: Hyprland.activeToplevel?.title ?? ""
     color: Colors.fg
-    font.family: "FiraCode Nerd Font"
-    font.pixelSize: 13
+    font.family: "Inter"
+    font.pixelSize: Config.smallFontSize
     Layout.maximumWidth: 300
-    Layout.leftMargin: 8
-    Layout.rightMargin: 8
     elide: Text.ElideRight
     maximumLineCount: 1
     visible: (Hyprland.activeToplevel?.title ?? "").length > 0

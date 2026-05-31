@@ -136,8 +136,8 @@ Scope {
                         spacing: 10
 
                         Text {
-                            text: "󰍉"
-                            font.family: "FiraCode Nerd Font"
+                            text: "\uE30C"
+                            font.family: "Phosphor-Fill"
                             font.pixelSize: 18
                             color: searchField.activeFocus ? Colors.accent : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.4)
                             Behavior on color { ColorAnimation { duration: 150 } }
@@ -147,7 +147,7 @@ Scope {
                             id: searchField
                             Layout.fillWidth: true
                             color: Colors.fg
-                            font.family: "FiraCode Nerd Font"
+                            font.family: "Inter"
                             font.pixelSize: 15
                             verticalAlignment: TextInput.AlignVCenter
                             clip: true
@@ -174,8 +174,8 @@ Scope {
 
                         Text {
                             visible: searchField.text.length > 0
-                            text: "󰅖"
-                            font.family: "FiraCode Nerd Font"
+                            text: "\uE4F6"
+                            font.family: "Phosphor-Fill"
                             font.pixelSize: 16
                             color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
                             MouseArea {
@@ -230,8 +230,8 @@ Scope {
                                 Text {
                                     anchors.centerIn: parent
                                     visible: modelData.icon.length === 0 || parent.children[0].status !== Image.Ready
-                                    text: "󰘔"
-                                    font.family: "FiraCode Nerd Font"
+                                    text: "\uE390"
+                                    font.family: "Phosphor-Fill"
                                     font.pixelSize: 24
                                     color: Colors.accent
                                 }
@@ -243,7 +243,7 @@ Scope {
                                     Layout.fillWidth: true
                                     text: modelData.name
                                     color: Colors.fg
-                                    font.family: "FiraCode Nerd Font"
+                                    font.family: "Inter"
                                     font.pixelSize: 14
                                     font.weight: Font.Normal
                                     elide: Text.ElideRight
@@ -254,7 +254,7 @@ Scope {
                             Text {
                                 visible: appList.currentIndex === index
                                 text: "↵"
-                                font.family: "FiraCode Nerd Font"
+                                font.family: "Inter"
                                 font.pixelSize: 11
                                 color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
                             }
@@ -274,7 +274,7 @@ Scope {
                         visible: appList.count === 0
                         text: "No applications found"
                         color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
-                        font.family: "FiraCode Nerd Font"
+                        font.family: "Inter"
                         font.pixelSize: 14
                     }
                 }
@@ -289,7 +289,7 @@ Scope {
                 Text {
                     text: "↑↓ navigate  ↵ launch  esc close"
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.25)
-                    font.family: "FiraCode Nerd Font"
+                    font.family: "Inter"
                     font.pixelSize: 10
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter

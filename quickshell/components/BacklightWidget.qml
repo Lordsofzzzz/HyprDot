@@ -1,55 +1,41 @@
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import "../"
+import "../services"
 
-Text {
-    id: root
-    color: Colors.fg
-    font.family: "FiraCode Nerd Font"
-    font.pixelSize: 16
+Item {
+    Layout.alignment: Qt.AlignVCenter
+    implicitWidth: rowLayout.implicitWidth
+    implicitHeight: rowLayout.implicitHeight
 
-    property int pct: 0
+    RowLayout {
+        id: rowLayout
+        anchors.fill: parent
+        spacing: Config.tightSpacing
 
-    text: pct < 1 ? ""
-        : pct < 34 ? "󰃞 " + pct + "%"
-        : pct < 67 ? "󰃟 " + pct + "%"
-        :             "󰃠 " + pct + "%"
-
-    Process {
-        id: readBrightProc
-        command: ["brightnessctl", "-m"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const parts = this.text.trim().split(",")
-                if (parts.length >= 4)
-                    root.pct = parseInt(parts[3].replace("%", "")) || 0
-            }
+        Text {
+            color: Colors.fg
+            font.family: "Phosphor-Fill"
+            font.pixelSize: Config.fontSize
+            text: BrightnessService.pct < 34 ? "\uE474" : "\uE472"
+            visible: BrightnessService.pct >= 1
         }
-    }
 
-    Process {
-        command: ["sh", "-c", "udevadm monitor --subsystem-match=backlight --udev"]
-        running: true
-        stdout: SplitParser {
-            onRead: readBrightProc.running = true
+        Text {
+            color: Colors.fg
+            font.family: "Inter"
+            font.pixelSize: Config.fontSize
+            text: BrightnessService.pct + "%"
+            visible: BrightnessService.pct >= 1
         }
     }
 
     MouseArea {
         anchors.fill: parent
-        onWheel: wheel => {
-            brightnessAdj.command = wheel.angleDelta.y > 0
-                ? ["brightnessctl", "set", "5%+"]
-                : ["brightnessctl", "set", "5%-"]
-            brightnessAdj.running = true
-        }
-    }
-    Process {
-        id: brightnessAdj
-        onRunningChanged: {
-            if (!running) readBrightProc.running = true
+        onWheel: function(wheel) {
+            var dir = wheel.angleDelta.y > 0 ? 5 : -5
+            BrightnessService.set(BrightnessService.pct + dir)
         }
     }
 }

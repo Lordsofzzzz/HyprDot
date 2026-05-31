@@ -5,8 +5,8 @@ import "../"
 
 Text {
     color: Colors.fg
-    font.family: "FiraCode Nerd Font"
-    font.pixelSize: 16
+    font.family: "Phosphor-Fill"
+    font.pixelSize: Config.fontSize
 
     property string netState: {
         var result = "none"
@@ -17,7 +17,7 @@ Text {
         })
         return result
     }
-    text: netState === "wifi" ? "󰤨 "
-        : netState === "eth"  ? "󰈀"
-        :                       "󰤭"
+    text: netState === "wifi" ? "\uE4EA"
+        : netState === "eth"  ? "\uEDDE"
+        :                       "\uE4F2"
 }

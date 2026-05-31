@@ -5,9 +5,9 @@ import "../"
 
 Text {
     color: Colors.urgent
-    font.family: "FiraCode Nerd Font"
-    font.pixelSize: 16
-    text: "󰍭"
+    font.family: "Phosphor-Fill"
+    font.pixelSize: Config.fontSize
+    text: "\uE328"
 
     property var source: Pipewire.defaultAudioSource
     property bool muted: source && source.ready && source.audio ? source.audio.muted : false
