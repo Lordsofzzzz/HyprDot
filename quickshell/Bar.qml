@@ -33,21 +33,32 @@ PanelWindow {
         color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
 
         RowLayout {
+            id: leftSection
             anchors {
-                fill: parent
+                left: parent.left
+                top: parent.top
+                bottom: parent.bottom
                 leftMargin: Config.barInnerMargin
-                rightMargin: Config.barInnerMargin
             }
             spacing: Config.spacing
 
             Workspaces { screen: bar.screen; Layout.alignment: Qt.AlignVCenter }
             WindowTitle { Layout.alignment: Qt.AlignVCenter }
+        }
 
-            Item { Layout.fillWidth: true }
+        ClockWidget {
+            anchors.centerIn: parent
+        }
 
-            ClockWidget { Layout.alignment: Qt.AlignCenter }
-
-            Item { Layout.fillWidth: true }
+        RowLayout {
+            id: rightSection
+            anchors {
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+                rightMargin: Config.barInnerMargin
+            }
+            spacing: Config.spacing
 
             RowLayout {
                 spacing: Config.looseSpacing

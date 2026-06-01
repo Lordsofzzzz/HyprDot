@@ -114,7 +114,7 @@ Scope {
                 function onClosed(): void {
                     if (notifData.closed) return;
                     notifData.closed = true;
-                    notifData.closing = true;
+                    notifData.closingFade = true;
                     notifData.exitCleanupTimer.start();
                 }
                 function onSummaryChanged(): void { if (notifData.notification) notifData.summary = notifData.notification.summary || ""; }
@@ -146,12 +146,11 @@ Scope {
                 }
             }
 
-            property bool closing: false
-
+            property bool closingFade: false
             property bool expired: false
 
             readonly property Timer exitCleanupTimer: Timer {
-                interval: 280
+                interval: 200
                 onTriggered: {
                     if (notifData.serviceRoot) notifData.serviceRoot._remove(notifData);
                     if (notifData.notification) {
@@ -182,7 +181,7 @@ Scope {
             function dismiss(): void {
                 if (closed) return;
                 closed = true;
-                closing = true;
+                closingFade = true;
                 exitCleanupTimer.start();
             }
 
@@ -241,7 +240,6 @@ Scope {
                     anchors.top: parent.top
                     anchors.right: parent.right
                     anchors.topMargin: 8
-                    anchors.rightMargin: 0
                     width: parent.width
                     spacing: 8
 
@@ -254,17 +252,10 @@ Scope {
                     Rectangle {
                         id: notifCard
                         required property var modelData
-                        required property int index
                         clip: true
 
                         width: 360
-                        height: notifCard.modelData.closing ? 0
-                                : cardContent.childrenRect.height + 28 + progressTrack.height
-
-                        Behavior on height {
-                            enabled: notifCard.modelData.closing
-                            NumberAnimation { duration: 250; easing.type: Easing.OutQuad }
-                        }
+                        height: cardContent.childrenRect.height + 28 + progressTrack.height
 
                         radius: 6
                         color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
@@ -285,21 +276,11 @@ Scope {
                         }
 
                         NumberAnimation on opacity {
-                            id: entryAnim
-                            from: 0; to: 1
+                            running: notifCard.modelData.closingFade
+                            to: 0
                             duration: 180
                             easing.type: Easing.OutCubic
-                            running: false
                         }
-
-                        NumberAnimation on opacity {
-                            running: notifCard.modelData.closing
-                            to: 0
-                            duration: 200
-                            easing.type: Easing.OutCubic
-                        }
-
-                        Component.onCompleted: { opacity = 0; entryAnim.start() }
 
                         Column {
                             id: cardContent
@@ -524,7 +505,7 @@ Scope {
                     }
                 }
             }
-            }
         }
     }
+  }
 }
