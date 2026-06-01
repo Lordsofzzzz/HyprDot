@@ -140,16 +140,26 @@ Scope {
                 running: !notifData.closed && !notifData.hovered
                          && notifData.urgency !== NotificationUrgency.Critical
                 interval: (notifData.expireTimeout > 0 ? notifData.expireTimeout : 5.0) * 1000
-                onTriggered: notifData.dismiss()
+                onTriggered: {
+                    notifData.expired = true;
+                    notifData.dismiss();
+                }
             }
 
             property bool closing: false
+
+            property bool expired: false
 
             readonly property Timer exitCleanupTimer: Timer {
                 interval: 280
                 onTriggered: {
                     if (notifData.serviceRoot) notifData.serviceRoot._remove(notifData);
-                    if (notifData.notification) try { notifData.notification.dismiss(); } catch(e) {}
+                    if (notifData.notification) {
+                        try {
+                            if (notifData.expired) notifData.notification.expire();
+                            else notifData.notification.dismiss();
+                        } catch(e) {}
+                    }
                     notifData.destroy();
                 }
             }

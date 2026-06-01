@@ -5,7 +5,6 @@ import "../"
 
 Item {
     id: clock
-    anchors.centerIn: parent
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
