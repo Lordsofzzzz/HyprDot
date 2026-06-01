@@ -13,6 +13,8 @@ PanelWindow {
     id: bar
     required property var modelData
     required property var screen
+    // Optional: called when the clock is clicked (for calendar toggle)
+    property var requestCalendarToggle: null
     anchors { top: true; left: true; right: true }
     implicitHeight: Config.barHeight + Config.barOuterMargin
     exclusiveZone: Config.barHeight + Config.barOuterMargin
@@ -48,6 +50,9 @@ PanelWindow {
 
         ClockWidget {
             anchors.centerIn: parent
+            onCalendarClicked: {
+                if (bar.requestCalendarToggle) bar.requestCalendarToggle()
+            }
         }
 
         RowLayout {

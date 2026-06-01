@@ -18,13 +18,26 @@ import "components"
 ShellRoot {
     id: root
 
+    // Shared: click the clock to toggle the calendar popup
+    property bool calendarVisible: false
+
     Launcher {}
     Wifi {}
     Osd {}
     NotificationPopup {}
 
+    CalendarPopup {
+        visible: root.calendarVisible
+        onVisibleChanged: if (!visible) root.calendarVisible = false
+    }
+
     Variants {
         model: Quickshell.screens
-        Bar { screen: modelData }
+        Bar {
+            screen: modelData
+            requestCalendarToggle: function() {
+                root.calendarVisible = !root.calendarVisible
+            }
+        }
     }
 }
