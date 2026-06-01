@@ -219,6 +219,7 @@ Scope {
                             Item {
                                 width: 32; height: 32
                                 Image {
+                                    id: appIconImg
                                     anchors.fill: parent
                                     source: modelData.icon
                                         ? "image://icon/" + modelData.icon
@@ -229,7 +230,7 @@ Scope {
                                 }
                                 Text {
                                     anchors.centerIn: parent
-                                    visible: modelData.icon.length === 0 || parent.children[0].status !== Image.Ready
+                                    visible: modelData.icon.length === 0 || appIconImg.status !== Image.Ready
                                     text: "\uE390"
                                     font.family: "Phosphor-Fill"
                                     font.pixelSize: 24
