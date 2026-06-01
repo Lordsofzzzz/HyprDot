@@ -20,6 +20,8 @@ ShellRoot {
 
     // Shared: click the clock to toggle the calendar popup
     property bool calendarVisible: false
+    // First bar window — used as the anchor for the calendar popup
+    property var barWindow: null
 
     Launcher {}
     Wifi {}
@@ -28,6 +30,8 @@ ShellRoot {
 
     CalendarPopup {
         visible: root.calendarVisible
+        barWindow: root.barWindow
+        onRequestToggle: root.calendarVisible = !root.calendarVisible
         onRequestClose: root.calendarVisible = false
     }
 
@@ -37,6 +41,9 @@ ShellRoot {
             screen: modelData
             requestCalendarToggle: function() {
                 root.calendarVisible = !root.calendarVisible
+            }
+            Component.onCompleted: {
+                if (!root.barWindow) root.barWindow = bar
             }
         }
     }

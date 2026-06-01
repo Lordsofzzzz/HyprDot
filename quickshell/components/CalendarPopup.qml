@@ -2,32 +2,67 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Wayland
 import "../"
 
-// ── Calendar popup overlay ─────────────────────────────────────────
-// Toggle via GlobalShortcut (Alt+C) or click the clock in the bar.
-// Renders as a fullscreen overlay with a sunken card near the top-center.
+// ── Calendar popup ────────────────────────────────────────────────
+// PopupWindow anchored below the bar. Clicking outside dismisses via
+// HyprlandFocusGrab. Toggle via GlobalShortcut or clock click.
+//
+// Usage:
+//   CalendarPopup {
+//     visible: root.calendarVisible
+//     barWindow: root.barWindow
+//     onRequestClose: root.calendarVisible = false
+//     onRequestToggle: root.calendarVisible = !root.calendarVisible
+//   }
 
-PanelWindow {
+PopupWindow {
     id: calPopup
-    visible: false
-    color: "transparent"
 
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    WlrLayershell.namespace: "calendar-popup"
-    WlrLayershell.exclusionMode: ExclusionMode.Ignore
+    // ── Interface ──────────────────────────────────────────────
+    signal requestClose()
+    signal requestToggle()
 
-    anchors { top: true; bottom: true; left: true; right: true }
+    required property var barWindow
+
+    // ── Anchor below the bar, centered ────────────────────────
+    anchor.window: barWindow
+    anchor.rect.x: barWindow ? barWindow.width / 2 - 135 : 0
+    anchor.rect.y: barWindow ? barWindow.height + 4 : 0
+
+    implicitWidth:  270
+    implicitHeight: 310
+
+    // ── Outside-click dismissal ───────────────────────────────
+    HyprlandFocusGrab {
+        windows: [calPopup]
+        active: calPopup.visible
+        onCleared: calPopup.requestClose()
+    }
+
+    // ── Escape to close ───────────────────────────────────────
+    Item {
+        id: focusCatcher
+        focus: true
+        Keys.onEscapePressed: calPopup.requestClose()
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+            focusCatcher.forceActiveFocus()
+            // Reset to today's date
+            var d = new Date()
+            currentYear = d.getFullYear()
+            currentMonth = d.getMonth()
+        }
+    }
 
     // ── Calendar state ─────────────────────────────────────────
-    readonly property var now: new Date()
-    property int currentYear:  now.getFullYear()
-    property int currentMonth: now.getMonth()   // 0–11
+    property int currentYear:  new Date().getFullYear()
+    property int currentMonth: new Date().getMonth()
 
-    function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate() }
-    function firstWeekday(y, m) { return new Date(y, m, 1).getDay() }   // 0=Sun
+    function daysInMonth(y, m)  { return new Date(y, m + 1, 0).getDate() }
+    function firstWeekday(y, m) { return new Date(y, m, 1).getDay() }
 
     function dayNum(cellIndex) {
         var off = cellIndex - firstWeekday(currentYear, currentMonth)
@@ -42,56 +77,29 @@ PanelWindow {
             && d === now.getDate()
     }
 
-    // ── Click outside → close ──────────────────────────────────
-    // NOTE: never set visible = false directly — it would break the
-    // binding from shell.qml. Instead we emit requestClose and let
-    // shell.qml update its calendarVisible property.
-    signal requestClose()
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: calPopup.requestClose()
-    }
-
-    // ── Keyboard close ─────────────────────────────────────────
-    Item {
-        id: focusCatcher
-        focus: true
-        Keys.onEscapePressed: calPopup.requestClose()
-    }
-
-    onVisibleChanged: if (visible) focusCatcher.forceActiveFocus()
-    Component.onCompleted: focusCatcher.forceActiveFocus()
-
     // ── Calendar card ──────────────────────────────────────────
     Rectangle {
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: Config.barHeight + Config.barOuterMargin + 10
-        width: 270
-        height: 310
+        anchors.fill: parent
         radius: 10
         color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.96)
         border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.3)
         border.width: 1
 
-        // Block click-through to the dismiss mouse area
-        MouseArea { anchors.fill: parent; onClicked: {} }
-
         ColumnLayout {
             anchors { fill: parent; margins: 14 }
             spacing: 10
 
-            // ── Header row: prev · Month YYYY · next ──────────
+            // ── Header: prev · Month YYYY · next ──────────────
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 6
 
-                // Prev month
                 Text {
-                    text: "\uE138"   // Phosphor caret-left
+                    text: "\uE138"     // Phosphor caret-left
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
+
                     MouseArea {
                         anchors.fill: parent
                         anchors.margins: -4
@@ -120,12 +128,12 @@ PanelWindow {
                     font.weight: Font.Medium
                 }
 
-                // Next month
                 Text {
-                    text: "\uE13A"   // Phosphor caret-right
+                    text: "\uE13A"     // Phosphor caret-right
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
+
                     MouseArea {
                         anchors.fill: parent
                         anchors.margins: -4
@@ -172,7 +180,7 @@ PanelWindow {
                 rowSpacing: 2
 
                 Repeater {
-                    model: 42   // 6 rows × 7 cols
+                    model: 42       // 6 rows × 7 cols
 
                     Rectangle {
                         readonly property int num: calPopup.dayNum(index)
@@ -197,7 +205,6 @@ PanelWindow {
                             font.weight: calPopup.isToday(num) ? Font.Bold : Font.Normal
                         }
 
-                        // Hover highlight
                         Rectangle {
                             anchors.fill: parent
                             radius: 4
@@ -215,7 +222,7 @@ PanelWindow {
                 }
             }
 
-            // ── Today marker ───────────────────────────────────
+            // ── Today label ────────────────────────────────────
             Text {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
@@ -228,10 +235,11 @@ PanelWindow {
         }
     }
 
-    // ── Keyboard shortcut ──────────────────────────────────────
+    // ── GlobalShortcut (via Hyprland) ──────────────────────────
+    //   bind = ALT, C, global, quickshell:calendar
     GlobalShortcut {
         name: "calendar"
         description: "Toggle calendar popup"
-        onPressed: calPopup.visible = !calPopup.visible
+        onPressed: calPopup.requestToggle()
     }
 }
