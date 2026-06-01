@@ -49,6 +49,32 @@ Scope {
         property string passwordText: ""
         property string statusMsg: ""
         property bool connecting: false
+        property var connectingNetwork: null
+
+        // Watch the network being connected to — reset state when it connects
+        Connections {
+            target: wifiPanel.connectingNetwork
+            function onConnectedChanged() {
+                if (wifiPanel.connectingNetwork?.connected) {
+                    wifiPanel.connecting = false
+                    wifiPanel.statusMsg = "Connected"
+                    wifiPanel.connectingNetwork = null
+                }
+            }
+        }
+
+        // Fallback: if connection doesn't resolve in 10s, reset anyway
+        Timer {
+            id: connectTimeout
+            interval: 10000
+            onTriggered: {
+                if (wifiPanel.connecting) {
+                    wifiPanel.connecting = false
+                    wifiPanel.statusMsg = "Connection failed"
+                    wifiPanel.connectingNetwork = null
+                }
+            }
+        }
 
         function signalIcon(strength) {
             if (strength > 0.75) return "\uE4EA"
@@ -70,12 +96,16 @@ Scope {
         function connectNetwork(net) {
             wifiPanel.connecting = true
             wifiPanel.statusMsg = "Connecting..."
+            wifiPanel.connectingNetwork = net
+            connectTimeout.start()
             net.connect()
         }
 
         function connectWithPassword(net, psk) {
             wifiPanel.connecting = true
             wifiPanel.statusMsg = "Connecting..."
+            wifiPanel.connectingNetwork = net
+            connectTimeout.start()
             net.connectWithPsk(psk)
         }
 
@@ -85,6 +115,7 @@ Scope {
                 passwordText = ""
                 statusMsg = ""
                 connecting = false
+                connectingNetwork = null
                 focusTimer.start()
             }
         }

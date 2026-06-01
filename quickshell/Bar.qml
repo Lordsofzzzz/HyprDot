@@ -45,6 +45,10 @@ PanelWindow {
 
             Item { Layout.fillWidth: true }
 
+            ClockWidget { Layout.alignment: Qt.AlignCenter }
+
+            Item { Layout.fillWidth: true }
+
             RowLayout {
                 spacing: Config.looseSpacing
                 Layout.alignment: Qt.AlignVCenter
@@ -87,7 +91,5 @@ PanelWindow {
             BacklightWidget { Layout.alignment: Qt.AlignVCenter }
             BatteryWidget { Layout.alignment: Qt.AlignVCenter }
         }
-
-        ClockWidget {}
     }
 }

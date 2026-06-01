@@ -9,7 +9,10 @@ Item {
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
-    property var now: new Date()
+    SystemClock {
+        id: sysclock
+        precision: SystemClock.Minutes
+    }
 
     RowLayout {
         id: layout
@@ -24,7 +27,7 @@ Item {
         }
 
         Text {
-            text: Qt.formatDateTime(clock.now, "h:mm AP")
+            text: Qt.formatDateTime(sysclock.date, "h:mm AP")
             color: Colors.fg
             font.family: "Inter"
             font.pixelSize: Config.fontSize
@@ -39,15 +42,10 @@ Item {
         }
 
         Text {
-            text: Qt.formatDateTime(clock.now, "ddd MMM dd")
+            text: Qt.formatDateTime(sysclock.date, "ddd MMM dd")
             color: Colors.fg
             font.family: "Inter"
             font.pixelSize: Config.tinyFontSize
         }
-    }
-
-    Timer {
-        interval: 10000; running: true; repeat: true
-        onTriggered: clock.now = new Date()
     }
 }

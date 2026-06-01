@@ -10,7 +10,7 @@ RowLayout {
     property var dev:     UPower.displayDevice
     property int pct:     dev ? Math.round(dev.percentage * 100) : 0
     property int state:   dev ? dev.state : 0
-    readonly property bool charging: state === UPowerDeviceState.Charging
+    readonly property bool charging: state === UPowerDeviceState.Charging || state === UPowerDeviceState.PendingCharge
     readonly property bool full:     state === UPowerDeviceState.FullyCharged
     readonly property var icons:
         ["\uE7C6","\uE7BE","\uE7C0","\uE7C2","\uE7C4"]

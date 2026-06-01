@@ -53,7 +53,7 @@ RowLayout {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    wsSwitch.command = ["hyprctl", "dispatch", "hl.dsp.focus({ workspace = " + String(index + 1) + " })"]
+                    wsSwitch.command = ["hyprctl", "dispatch", "hl.dsp.focus({ workspace = " + (index + 1) + " })"]
                     wsSwitch.running = true
                 }
             }
