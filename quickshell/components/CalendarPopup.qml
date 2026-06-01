@@ -2,74 +2,76 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Wayland
 import "../"
 
-// ── Calendar popup ────────────────────────────────────────────────
-// PopupWindow anchored below the bar. Clicking outside dismisses via
-// HyprlandFocusGrab. Toggle via GlobalShortcut or clock click.
+// ── Calendar popup overlay ─────────────────────────────────────────
+// Full-screen transparent overlay with a centered calendar card.
+// Uses PanelWindow (not PopupWindow) because PopupWindow's grabFocus
+// and HyprlandFocusGrab both have issues with preserving the
+// visible binding for repeated open/close.
 //
-// Usage:
+// Binding-safe pattern:
+//   - never set visible = false directly (would break the binding)
+//   - emit requestClose → shell.qml sets calendarVisible = false → binding
+//
+// Usage in shell.qml:
 //   CalendarPopup {
 //     visible: root.calendarVisible
-//     barWindow: root.barWindow
 //     onRequestClose: root.calendarVisible = false
 //     onRequestToggle: root.calendarVisible = !root.calendarVisible
 //   }
 
-PopupWindow {
+PanelWindow {
     id: calPopup
+    visible: false
+    color: "transparent"
+
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+    WlrLayershell.namespace: "calendar-popup"
+    WlrLayershell.exclusionMode: ExclusionMode.Ignore
+
+    anchors { top: true; bottom: true; left: true; right: true }
 
     // ── Interface ──────────────────────────────────────────────
     signal requestClose()
     signal requestToggle()
 
-    required property var barWindow
-
-    // ── Anchor below the bar, centered ────────────────────────
-    anchor.window: barWindow
-    anchor.rect.x: barWindow ? barWindow.width / 2 - 135 : 0
-    anchor.rect.y: barWindow ? barWindow.height + 4 : 0
-
-    implicitWidth:  270
-    implicitHeight: 310
-    color:          "transparent"     // window bg — Rectangle handles the actual background
-
-    // ── Outside-click dismissal ───────────────────────────────
-    // active is set manually in onVisibleChanged — never bind it,
-    // because the system sets it to false on dismissal which would
-    // break the binding and prevent re-activation on the next open.
-    HyprlandFocusGrab {
-        id: focusGrab
-        windows: [calPopup]
-        onCleared: calPopup.requestClose()
+    // ── Click outside → close ──────────────────────────────────
+    // NOTE: never set visible = false directly — it would break the
+    // binding from shell.qml. Instead emit requestClose and let
+    // shell.qml update its calendarVisible property.
+    MouseArea {
+        anchors.fill: parent
+        onClicked: calPopup.requestClose()
+        z: 0
     }
 
-    // ── Escape to close ───────────────────────────────────────
+    // ── Keyboard close ─────────────────────────────────────────
     Item {
         id: focusCatcher
         focus: true
         Keys.onEscapePressed: calPopup.requestClose()
+        z: 1
     }
 
     onVisibleChanged: {
         if (visible) {
-            focusGrab.active = true
             focusCatcher.forceActiveFocus()
             // Reset to today's date
             var d = new Date()
             currentYear = d.getFullYear()
             currentMonth = d.getMonth()
-        } else {
-            focusGrab.active = false
         }
     }
 
     // ── Calendar state ─────────────────────────────────────────
     property int currentYear:  new Date().getFullYear()
-    property int currentMonth: new Date().getMonth()
+    property int currentMonth: new Date().getMonth()   // 0–11
 
     function daysInMonth(y, m)  { return new Date(y, m + 1, 0).getDate() }
-    function firstWeekday(y, m) { return new Date(y, m, 1).getDay() }
+    function firstWeekday(y, m) { return new Date(y, m, 1).getDay() }   // 0=Sun
 
     function dayNum(cellIndex) {
         var off = cellIndex - firstWeekday(currentYear, currentMonth)
@@ -86,27 +88,34 @@ PopupWindow {
 
     // ── Calendar card ──────────────────────────────────────────
     Rectangle {
-        anchors.fill: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: Config.barHeight + Config.barOuterMargin + 10
+        width: 270
+        height: 310
         radius: 10
         color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.96)
         border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.3)
         border.width: 1
+        z: 2
+
+        // Block click-through to the dismiss mouse area
+        MouseArea { anchors.fill: parent; onClicked: {} }
 
         ColumnLayout {
             anchors { fill: parent; margins: 14 }
             spacing: 10
 
-            // ── Header: prev · Month YYYY · next ──────────────
+            // ── Header row: prev · Month YYYY · next ──────────
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 6
 
+                // Prev month
                 Text {
-                    text: "\uE138"     // Phosphor caret-left
+                    text: "\uE138"   // Phosphor caret-left
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
-
                     MouseArea {
                         anchors.fill: parent
                         anchors.margins: -4
@@ -135,12 +144,12 @@ PopupWindow {
                     font.weight: Font.Medium
                 }
 
+                // Next month
                 Text {
-                    text: "\uE13A"     // Phosphor caret-right
+                    text: "\uE13A"   // Phosphor caret-right
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
-
                     MouseArea {
                         anchors.fill: parent
                         anchors.margins: -4
@@ -187,7 +196,7 @@ PopupWindow {
                 rowSpacing: 2
 
                 Repeater {
-                    model: 42       // 6 rows × 7 cols
+                    model: 42   // 6 rows × 7 cols
 
                     Rectangle {
                         readonly property int num: calPopup.dayNum(index)
@@ -212,6 +221,7 @@ PopupWindow {
                             font.weight: calPopup.isToday(num) ? Font.Bold : Font.Normal
                         }
 
+                        // Hover highlight
                         Rectangle {
                             anchors.fill: parent
                             radius: 4
@@ -229,7 +239,7 @@ PopupWindow {
                 }
             }
 
-            // ── Today label ────────────────────────────────────
+            // ── Today marker ───────────────────────────────────
             Text {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
@@ -242,7 +252,7 @@ PopupWindow {
         }
     }
 
-    // ── GlobalShortcut (via Hyprland) ──────────────────────────
+    // ── Keyboard shortcut (via Hyprland) ───────────────────────
     //   bind = ALT, C, global, quickshell:calendar
     GlobalShortcut {
         name: "calendar"

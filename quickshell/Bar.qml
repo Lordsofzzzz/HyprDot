@@ -15,8 +15,6 @@ PanelWindow {
     required property var screen
     // Optional: called when the clock is clicked (for calendar toggle)
     property var requestCalendarToggle: null
-    // Optional: called once the bar window is fully created
-    property var onBarReady: null
     anchors { top: true; left: true; right: true }
     implicitHeight: Config.barHeight + Config.barOuterMargin
     exclusiveZone: Config.barHeight + Config.barOuterMargin
@@ -111,7 +109,4 @@ PanelWindow {
         }
     }
 
-    Component.onCompleted: {
-        if (bar.onBarReady) bar.onBarReady(bar)
-    }
 }
