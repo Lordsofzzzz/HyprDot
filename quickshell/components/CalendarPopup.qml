@@ -32,6 +32,7 @@ PopupWindow {
 
     implicitWidth:  270
     implicitHeight: 310
+    color:          "transparent"     // window bg — Rectangle handles the actual background
 
     // ── Outside-click dismissal ───────────────────────────────
     HyprlandFocusGrab {
