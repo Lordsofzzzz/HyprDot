@@ -35,9 +35,12 @@ PopupWindow {
     color:          "transparent"     // window bg — Rectangle handles the actual background
 
     // ── Outside-click dismissal ───────────────────────────────
+    // active is set manually in onVisibleChanged — never bind it,
+    // because the system sets it to false on dismissal which would
+    // break the binding and prevent re-activation on the next open.
     HyprlandFocusGrab {
+        id: focusGrab
         windows: [calPopup]
-        active: calPopup.visible
         onCleared: calPopup.requestClose()
     }
 
@@ -50,11 +53,14 @@ PopupWindow {
 
     onVisibleChanged: {
         if (visible) {
+            focusGrab.active = true
             focusCatcher.forceActiveFocus()
             // Reset to today's date
             var d = new Date()
             currentYear = d.getFullYear()
             currentMonth = d.getMonth()
+        } else {
+            focusGrab.active = false
         }
     }
 
