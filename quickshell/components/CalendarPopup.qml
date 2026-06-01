@@ -83,7 +83,7 @@ PanelWindow {
 
                 // Prev month
                 Text {
-                    text: "\uE0C2"   // Phosphor caret-left
+                    text: "\uE138"   // Phosphor caret-left
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
@@ -117,7 +117,7 @@ PanelWindow {
 
                 // Next month
                 Text {
-                    text: "\uE0C3"   // Phosphor caret-right
+                    text: "\uE13A"   // Phosphor caret-right
                     color: Colors.dim
                     font.family: "Phosphor-Fill"
                     font.pixelSize: 16
