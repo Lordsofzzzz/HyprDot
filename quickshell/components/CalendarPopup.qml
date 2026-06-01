@@ -43,20 +43,25 @@ PanelWindow {
     }
 
     // ── Click outside → close ──────────────────────────────────
+    // NOTE: never set visible = false directly — it would break the
+    // binding from shell.qml. Instead we emit requestClose and let
+    // shell.qml update its calendarVisible property.
+    signal requestClose()
+
     MouseArea {
         anchors.fill: parent
-        onClicked: calPopup.visible = false
+        onClicked: calPopup.requestClose()
     }
 
     // ── Keyboard close ─────────────────────────────────────────
     Item {
         id: focusCatcher
         focus: true
-        Keys.onEscapePressed: calPopup.visible = false
+        Keys.onEscapePressed: calPopup.requestClose()
     }
 
-    Component.onCompleted: focusCatcher.forceActiveFocus()
     onVisibleChanged: if (visible) focusCatcher.forceActiveFocus()
+    Component.onCompleted: focusCatcher.forceActiveFocus()
 
     // ── Calendar card ──────────────────────────────────────────
     Rectangle {

@@ -28,7 +28,7 @@ ShellRoot {
 
     CalendarPopup {
         visible: root.calendarVisible
-        onVisibleChanged: if (!visible) root.calendarVisible = false
+        onRequestClose: root.calendarVisible = false
     }
 
     Variants {
