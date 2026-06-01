@@ -42,8 +42,9 @@ ShellRoot {
             requestCalendarToggle: function() {
                 root.calendarVisible = !root.calendarVisible
             }
-            Component.onCompleted: {
-                if (!root.barWindow) root.barWindow = bar
+            // Called by Bar.qml's Component.onCompleted with its own window
+            onBarReady: function(win) {
+                if (!root.barWindow) root.barWindow = win
             }
         }
     }
