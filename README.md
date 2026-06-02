@@ -135,7 +135,7 @@ Then reload Hyprland, restart Quickshell, or run `wallpaper-picker.sh` which doe
 | `SUPER+E` | Open Nautilus |
 | `SUPER+SHIFT+Q` | Logout |
 | `SUPER+W` | Toggle WiFi panel |
-| `ALT+C` | Toggle calendar popup (add with: `bind = ALT, C, global, quickshell:calendar`) |
+| `ALT+C` | Toggle calendar popup |
 | `SUPER+S` | Toggle scratchpad (special workspace "magic") |
 | `SUPER+SHIFT+S` | Move window to scratchpad |
 | `SUPER+V` | Toggle float |
