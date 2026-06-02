@@ -93,7 +93,7 @@ PanelWindow {
         width: 270
         height: 310
         radius: 10
-        color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.96)
+        color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.92)
         border.color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.3)
         border.width: 1
         z: 2
