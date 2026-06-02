@@ -75,7 +75,8 @@ quickshell/
 └── components/
     ├── Workspaces.qml     # workspace indicators — dynamic visibility
     ├── WindowTitle.qml    # active Hyprland window title
-    ├── ClockWidget.qml    # date/time display
+    ├── ClockWidget.qml    # date/time display — click to open calendar
+    ├── CalendarPopup.qml  # month grid calendar overlay, outside-click closes
     ├── AudioWidget.qml    # PipeWire volume icon + percentage
     ├── MicMuteWidget.qml  # mic mute indicator (hidden when unmuted)
     ├── BatteryWidget.qml  # UPower battery with charge thresholds
@@ -134,6 +135,7 @@ Then reload Hyprland, restart Quickshell, or run `wallpaper-picker.sh` which doe
 | `SUPER+E` | Open Nautilus |
 | `SUPER+SHIFT+Q` | Logout |
 | `SUPER+W` | Toggle WiFi panel |
+| `ALT+C` | Toggle calendar popup (add with: `bind = ALT, C, global, quickshell:calendar`) |
 | `SUPER+S` | Toggle scratchpad (special workspace "magic") |
 | `SUPER+SHIFT+S` | Move window to scratchpad |
 | `SUPER+V` | Toggle float |
@@ -147,15 +149,3 @@ Then reload Hyprland, restart Quickshell, or run `wallpaper-picker.sh` which doe
 | `SUPER+arrow` | Focus direction |
 | `XF86Audio*`, `XF86MonBrightness*` | Volume, media, backlight control |
 
-## Workflow
-
-```bash
-# Edit configs as usual (symlinks point to the repo)
-vim ~/.config/quickshell/Launcher.qml
-
-# Commit changes
-cd ~/.config
-git add .
-git commit -m "change something"
-git push
-```
