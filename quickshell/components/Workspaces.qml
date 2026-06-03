@@ -45,7 +45,7 @@ RowLayout {
                 text: index + 1
                 font.family: "Inter"
                 font.pixelSize: Config.smallFontSize
-                color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, toplevelCount > 0 ? 0.6 : 0.25)
+                color: toplevelCount > 0 ? Colors.fg : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.25)
                 Behavior on color { ColorAnimation { duration: 120 } }
             }
 
