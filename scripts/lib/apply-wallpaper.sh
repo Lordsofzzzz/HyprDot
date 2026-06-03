@@ -19,7 +19,4 @@ apply() {
   matugen image "$img" --source-color-index 0
 
   hyprctl reload 2>/dev/null || true
-
-  pkill quickshell 2>/dev/null || true
-  quickshell & disown
 }
