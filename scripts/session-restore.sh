@@ -12,5 +12,3 @@ CURRENT_LINK="$CACHE_DIR/current"
 if [ -L "$CURRENT_LINK" ] && [ -f "$(readlink "$CURRENT_LINK")" ]; then
   apply "$(readlink "$CURRENT_LINK")"
 fi
-
-quickshell & disown
