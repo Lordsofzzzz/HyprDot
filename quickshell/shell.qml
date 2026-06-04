@@ -14,6 +14,8 @@ import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import Quickshell.Widgets
 import "components"
+import "."
+import "services"
 
 ShellRoot {
     id: root
@@ -25,6 +27,8 @@ ShellRoot {
     Wifi {}
     Osd {}
     NotificationPopup {}
+
+    WallpaperPicker {}
 
     CalendarPopup {
         visible: root.calendarVisible
