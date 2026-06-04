@@ -120,7 +120,6 @@ Scope {
 
         Item {
           anchors.centerIn: parent
-          anchors.horizontalCenterOffset: ((root.baseItemHeight - height) / 2) * root.skewFactor
           width: parent.width
           height: parent.height
 
@@ -142,13 +141,13 @@ Scope {
 
             Image {
               anchors.centerIn: parent
-              width: root.baseItemWidth * 1.5 + (root.baseItemHeight + 20) * Math.abs(root.skewFactor) + 20
+              width: (root.baseItemWidth * 1.5) + 2 * (root.baseItemHeight + 20) * Math.abs(root.skewFactor) + 40
               height: root.baseItemHeight + 20
               source: "file://" + modelData
               fillMode: Image.PreserveAspectCrop
               asynchronous: true
               smooth: true
-              sourceSize: Qt.size(420, 440)
+              sourceSize: Qt.size(660, 320)
 
               transform: Matrix4x4 {
                 property real s: -root.skewFactor
