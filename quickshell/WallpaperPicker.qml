@@ -30,6 +30,11 @@ Scope {
   // Unfiltered list — pass through directly
   property var filteredWallpapers: WallpaperService.wallpapers
 
+  // Cover-flow dimensions (at Scope level so all children can see them)
+  readonly property real baseItemWidth: 280
+  readonly property real baseItemHeight: baseItemWidth * 1.05
+  readonly property real skewFactor: -0.35
+
   // ── Window ─────────────────────────────────────────────────────────────
   PanelWindow {
     id: win
@@ -55,21 +60,26 @@ Scope {
       if (visible) grid.forceActiveFocus()
     }
 
-    // ── Minimal grid — no chrome, just wallpapers ───────────────────────
-    GridView {
+    // ── Cover-flow carousel (like magetsu002) ──────────────────────────
+    ListView {
       id: grid
       anchors.centerIn: parent
-      width: Math.min(parent.width * 0.92, 960)
-      height: Math.min(parent.height * 0.85, 640)
+      width: parent.width
+      height: root.baseItemHeight + 60
+      spacing: 0
+      orientation: ListView.Horizontal
       clip: true
-      boundsBehavior: Flickable.StopAtBounds
-      cellWidth: Math.floor(width / 4)
-      cellHeight: cellWidth * 0.6
       currentIndex: 0
-      keyNavigationEnabled: true
-      keyNavigationWraps: true
       focus: true
-      activeFocusOnTab: true
+      interactive: true
+
+      highlightRangeMode: ListView.StrictlyEnforceRange
+      preferredHighlightBegin: (grid.width / 2) - (root.baseItemWidth * 1.5) / 2
+      preferredHighlightEnd: (grid.width / 2) + (root.baseItemWidth * 1.5) / 2
+      highlightMoveDuration: 350
+
+      header: Item { width: Math.max(0, (grid.width / 2) - (root.baseItemWidth * 1.5) / 2); height: 1 }
+      footer: Item { width: Math.max(0, (grid.width / 2) - (root.baseItemWidth * 1.5) / 2); height: 1 }
 
       Keys.onEscapePressed: {
         if (WallpaperService.showPreview) {
@@ -89,52 +99,76 @@ Scope {
       model: root.filteredWallpapers
 
       delegate: Item {
+        id: delegateRoot
         required property string modelData
         required property int index
 
-        width: grid.cellWidth
-        height: grid.cellHeight
+        readonly property bool isCurrent: ListView.isCurrentItem
+        readonly property real targetWidth: isCurrent ? (root.baseItemWidth * 1.5) : (root.baseItemWidth * 0.5)
+        readonly property real targetHeight: isCurrent ? (root.baseItemHeight + 20) : root.baseItemHeight
 
-        Rectangle {
-          anchors.fill: parent
-          anchors.margins: 3
-          radius: 6
-          color: Qt.rgba(0, 0, 0, 0.3)
-          border.color: WallpaperService.currentWallpaper === modelData
-            ? Colors.accent
-            : (grid.currentIndex === index
-              ? Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
-              : "transparent")
-          border.width: WallpaperService.currentWallpaper === modelData ? 2 : 1
-          clip: true
+        width: targetWidth
+        height: targetHeight
+        opacity: isCurrent ? 1.0 : 0.5
+        z: isCurrent ? 10 : 1
 
-          Behavior on border.color {
-            ColorAnimation { duration: 100 }
+        Behavior on width { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
+        Behavior on height { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
+        Behavior on opacity { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
+
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+
+        Item {
+          anchors.centerIn: parent
+          anchors.horizontalCenterOffset: ((root.baseItemHeight - height) / 2) * root.skewFactor
+          width: parent.width
+          height: parent.height
+
+          transform: Matrix4x4 {
+            property real s: root.skewFactor
+            matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
           }
 
-          Image {
+          Rectangle {
             anchors.fill: parent
-            anchors.margins: 1
-            source: "file://" + modelData
-            fillMode: Image.PreserveAspectCrop
-            sourceSize: Qt.size(200, 120)
-            asynchronous: true
-            smooth: true
-          }
+            anchors.margins: 4
+            radius: 8
+            color: Qt.rgba(0, 0, 0, 0.4)
+            border.color: WallpaperService.currentWallpaper === modelData
+              ? Colors.accent
+              : "transparent"
+            border.width: WallpaperService.currentWallpaper === modelData ? 2 : 0
+            clip: true
 
-          MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            Image {
+              anchors.centerIn: parent
+              width: root.baseItemWidth * 1.5 + (root.baseItemHeight + 20) * Math.abs(root.skewFactor) + 20
+              height: root.baseItemHeight + 20
+              source: "file://" + modelData
+              fillMode: Image.PreserveAspectCrop
+              asynchronous: true
+              smooth: true
 
-            onClicked: function(mouse) {
-              grid.currentIndex = index
-              if (mouse.button === Qt.RightButton) {
-                WallpaperService.preview(modelData)
-              } else {
-                WallpaperService.setWallpaper(modelData)
-                win.visible = false
+              transform: Matrix4x4 {
+                property real s: -root.skewFactor
+                matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+              }
+            }
+
+            MouseArea {
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+              onClicked: function(mouse) {
+                grid.currentIndex = index
+                if (mouse.button === Qt.RightButton) {
+                  WallpaperService.preview(modelData)
+                } else {
+                  WallpaperService.setWallpaper(modelData)
+                  win.visible = false
+                }
               }
             }
           }

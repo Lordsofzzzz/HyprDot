@@ -68,8 +68,8 @@ Singleton {
     id: scanner
     command: [
       "sh", "-c",
-      'find "$HOME/Pictures/wallpapers" "$HOME/Pictures/Wallpapers" "$HOME/Pictures" '
-      + '-maxdepth 2 -type f \\( '
+      'find "$HOME/Pictures/wallpapers" '
+      + '-maxdepth 1 -type f \\( '
       + '-iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" '
       + '\\) 2>/dev/null | sort -u | head -500'
     ]
