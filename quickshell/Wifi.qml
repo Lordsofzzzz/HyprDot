@@ -157,31 +157,6 @@ Scope {
                 }
                 spacing: 12
 
-                // ── Header (no toggle switch) ─────────────────────
-                RowLayout {
-                    spacing: 8
-                    Text {
-                        text: "\uE4EA"
-                        font.family: "Phosphor-Fill"
-                        font.pixelSize: 18
-                        color: Colors.fg
-                    }
-                    Text {
-                        text: "WiFi"
-                        color: Colors.fg
-                        font.family: "Inter"
-                        font.pixelSize: 15
-                        font.weight: Font.Medium
-                    }
-                }
-
-                // Divider
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 1
-                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.08)
-                }
-
                 // ── Toggle Row (index 0 in focus chain) ───────────
                 Rectangle {
                     id: toggleRow
