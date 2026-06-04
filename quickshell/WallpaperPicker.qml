@@ -1,7 +1,5 @@
 // WallpaperPicker — grid-based wallpaper picker with search and preview
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -72,6 +70,8 @@ Scope {
       currentIndex: 0
       focus: true
       interactive: true
+      keyNavigationWraps: true
+      cacheBuffer: 600
 
       highlightRangeMode: ListView.StrictlyEnforceRange
       preferredHighlightBegin: (grid.width / 2) - (root.baseItemWidth * 1.5) / 2
@@ -148,6 +148,7 @@ Scope {
               fillMode: Image.PreserveAspectCrop
               asynchronous: true
               smooth: true
+              sourceSize: Qt.size(420, 440)
 
               transform: Matrix4x4 {
                 property real s: -root.skewFactor
