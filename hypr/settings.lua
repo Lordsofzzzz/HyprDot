@@ -36,6 +36,7 @@ hl.config({
         vrr                     = 2,
         mouse_move_enables_dpms = true,
         key_press_enables_dpms  = true,
+        disable_hyprland_guiutils_check = true,
     },
 })
 
