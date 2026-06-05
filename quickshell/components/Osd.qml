@@ -9,6 +9,9 @@ import "../services"
 Scope {
     id: root
 
+    property bool _ready: false
+    Component.onCompleted: Qt.callLater(function() { root._ready = true })
+
     property string osdIcon:     ""
     property string osdLabel:    ""
     property real   osdProgress: 0
@@ -51,13 +54,13 @@ Scope {
 
     Connections {
         target: sinkAudio
-        function onVolumeChanged() { showVolumeOsd() }
-        function onMutedChanged()  { showVolumeOsd() }
+        function onVolumeChanged() { if (root._ready) showVolumeOsd() }
+        function onMutedChanged()  { if (root._ready) showVolumeOsd() }
     }
 
     Connections {
         target: sourceAudio
-        function onMutedChanged() { showMicOsd() }
+        function onMutedChanged() { if (root._ready) showMicOsd() }
     }
 
     Connections {

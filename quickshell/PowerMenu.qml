@@ -14,6 +14,7 @@ PanelWindow {
     id: root
 
     // ── Interface ──────────────────────────────────────────────
+    visible: false
     signal requestClose()
     signal requestToggle()
 
