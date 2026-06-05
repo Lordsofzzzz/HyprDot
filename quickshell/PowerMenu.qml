@@ -17,8 +17,27 @@ PanelWindow {
     signal requestClose()
     signal requestToggle()
 
-    onRequestToggle: visible = !visible
-    onRequestClose: visible = false
+    onRequestToggle: root.toggle()
+    onRequestClose: root.close()
+
+    function toggle() {
+        if (closing) {
+            closing = false
+            closeAnim.stop()
+            contentItem.opacity = 1
+        } else if (visible) {
+            close()
+        } else {
+            visible = true
+        }
+    }
+
+    function close() {
+        if (!visible && !closing) return
+        if (closing) return
+        closing = true
+        closeAnim.start()
+    }
 
     anchors {
         top: true
@@ -44,11 +63,21 @@ PanelWindow {
     GlobalShortcut {
         name: "powermenu"
         description: "Toggle powermenu"
-        onPressed: root.requestToggle()
+        onPressed: root.toggle()
     }
 
     Process {
         id: proc
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (this.text.length > 0)
+                    print("[powermenu] stderr:", this.text)
+            }
+        }
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0)
+                print("[powermenu] command failed with exit code", exitCode)
+        }
     }
 
     function run(cmd) {
@@ -56,17 +85,51 @@ PanelWindow {
         root.requestClose()
     }
 
+    // ── Animation state ────────────────────────────────────
+    property bool closing: false
+
+    SequentialAnimation {
+        id: closeAnim
+        NumberAnimation {
+            target: root
+            property: "contentItem.opacity"
+            to: 0
+            duration: 150
+        }
+        ScriptAction {
+            script: {
+                root.closing = false
+                root.visible = false
+            }
+        }
+    }
+
     // ── Keyboard navigation state ──────────────────────────────
     property int currentIndex: 0
-    readonly property int maxIndex: 5
+    property bool confirming: false
+    property string pendingAction: ""
 
     function activateCurrent() {
-        // Find the PowerButton at currentIndex and click it via its signal
-        var btn = contentRow.children[currentIndex]
-        if (btn && btn.hasOwnProperty("doClick")) btn.doClick()
+        var btn = powerRepeater.itemAt(currentIndex)
+        if (btn) btn.doClick()
     }
 
     function executeAction(action) {
+        var deadly = ["reboot", "shutdown", "logout"]
+        if (deadly.indexOf(action) >= 0) {
+            if (!confirming) {
+                confirming = true
+                pendingAction = action
+                return
+            }
+            if (action !== pendingAction) {
+                confirming = false
+                pendingAction = ""
+                return
+            }
+            confirming = false
+            pendingAction = ""
+        }
         switch (action) {
             case "lock":     root.run("hyprlock"); break
             case "suspend":  root.run("systemctl suspend"); break
@@ -81,20 +144,47 @@ PanelWindow {
     Item {
         id: focusCatcher
         focus: true
-        Keys.onEscapePressed: root.requestClose()
+        Keys.onEscapePressed: {
+            if (root.confirming) {
+                root.confirming = false
+                root.pendingAction = ""
+            } else {
+                root.requestClose()
+            }
+        }
         Keys.onLeftPressed: {
-            root.currentIndex = root.currentIndex > 0 ? root.currentIndex - 1 : root.maxIndex
+            root.confirming = false
+            root.pendingAction = ""
+            var last = powerRepeater.count - 1
+            root.currentIndex = root.currentIndex > 0 ? root.currentIndex - 1 : last
         }
         Keys.onRightPressed: {
-            root.currentIndex = root.currentIndex < root.maxIndex ? root.currentIndex + 1 : 0
+            root.confirming = false
+            root.pendingAction = ""
+            var last = powerRepeater.count - 1
+            root.currentIndex = root.currentIndex < last ? root.currentIndex + 1 : 0
         }
         Keys.onReturnPressed: root.activateCurrent()
         Keys.onSpacePressed: root.activateCurrent()
+        Keys.onTabPressed: {
+            root.confirming = false
+            root.pendingAction = ""
+            root.currentIndex = (root.currentIndex + 1) % powerRepeater.count
+        }
+        Keys.onBacktabPressed: {
+            root.confirming = false
+            root.pendingAction = ""
+            var last = powerRepeater.count - 1
+            root.currentIndex = root.currentIndex > 0 ? root.currentIndex - 1 : last
+        }
     }
 
     onVisibleChanged: {
         if (visible) {
+            contentItem.opacity = 1
             currentIndex = 0
+            confirming = false
+            pendingAction = ""
             focusCatcher.forceActiveFocus()
         }
     }
@@ -130,13 +220,14 @@ PanelWindow {
                     spacing: 12
 
                     Repeater {
+                        id: powerRepeater
                         model: ListModel {
                             ListElement { btnIcon: "\uE2FA"; btnLabel: "Lock";     btnAction: "lock";     dangerous: false }
                             ListElement { btnIcon: "\uE330"; btnLabel: "Suspend";  btnAction: "suspend";  dangerous: false }
                             ListElement { btnIcon: "\uE5AA"; btnLabel: "Hibernate";btnAction: "hibernate";dangerous: false }
-                            ListElement { btnIcon: "\uE094"; btnLabel: "Reboot";   btnAction: "reboot";   dangerous: false }
+                            ListElement { btnIcon: "\uE094"; btnLabel: "Reboot";   btnAction: "reboot";   dangerous: true  }
                             ListElement { btnIcon: "\uE3DA"; btnLabel: "Shutdown"; btnAction: "shutdown"; dangerous: true  }
-                            ListElement { btnIcon: "\uE42A"; btnLabel: "Logout";   btnAction: "logout";   dangerous: false }
+                            ListElement { btnIcon: "\uE42A"; btnLabel: "Logout";   btnAction: "logout";   dangerous: true  }
                         }
 
                         delegate: PowerButton {
@@ -150,6 +241,7 @@ PanelWindow {
                             label: btnLabel
                             isDanger: dangerous
                             isSelected: root.currentIndex === index
+                            isConfirmTarget: root.confirming && root.pendingAction === btnAction
                             onClicked: root.executeAction(btnAction)
                         }
                     }
@@ -165,9 +257,9 @@ PanelWindow {
         required property string icon
         property bool isDanger: false
         property bool isSelected: false
+        property bool isConfirmTarget: false
 
         signal clicked()
-        // Exposed for keyboard activation from parent
         function doClick() { btn.clicked() }
 
         implicitWidth: 72
@@ -176,11 +268,13 @@ PanelWindow {
 
         readonly property bool _active: mouse.containsMouse || isSelected
 
-        color: _active
-               ? (isDanger
-                   ? Qt.rgba(Colors.urgent.r, Colors.urgent.g, Colors.urgent.b, 0.12)
-                   : Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.12))
-               : "transparent"
+        color: isConfirmTarget
+               ? Qt.rgba(Colors.urgent.r, Colors.urgent.g, Colors.urgent.b, 0.2)
+               : (_active
+                   ? (isDanger
+                       ? Qt.rgba(Colors.urgent.r, Colors.urgent.g, Colors.urgent.b, 0.12)
+                       : Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.12))
+                   : "transparent")
 
         Behavior on color { ColorAnimation { duration: 100 } }
 
@@ -189,9 +283,9 @@ PanelWindow {
             anchors.fill: parent
             radius: 14
             color: "transparent"
-            border.width: isSelected ? 2 : 0
-            border.color: isDanger ? Qt.rgba(Colors.urgent.r, Colors.urgent.g, Colors.urgent.b, 0.5)
-                                   : Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.5)
+            border.width: isConfirmTarget ? 3 : (isSelected ? 2 : 0)
+            border.color: isConfirmTarget ? Colors.urgent : (isDanger ? Qt.rgba(Colors.urgent.r, Colors.urgent.g, Colors.urgent.b, 0.5)
+                                   : Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.5))
             visible: isSelected
         }
 
@@ -212,9 +306,10 @@ PanelWindow {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: btn.label
+                text: btn.isConfirmTarget ? "Confirm?" : btn.label
                 font.pixelSize: 11
                 font.family: "monospace"
+                font.bold: btn.isConfirmTarget
                 color: _active
                        ? (btn.isDanger ? Colors.urgent : Colors.accent)
                        : Colors.dim
