@@ -15,14 +15,12 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import "components"
 import "."
-import "services"
 
 ShellRoot {
     id: root
 
     // Shared: click the clock to toggle the calendar popup
     property bool calendarVisible: false
-
     Launcher {}
     Wifi {}
     Osd {}
@@ -35,6 +33,8 @@ ShellRoot {
         onRequestToggle: root.calendarVisible = !root.calendarVisible
         onRequestClose: root.calendarVisible = false
     }
+
+    PowerMenu {}
 
     Variants {
         model: Quickshell.screens
