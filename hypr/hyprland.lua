@@ -2,7 +2,6 @@
 -- Hyprland 0.55+ — Lua config entry point
 require("monitors")
 require("autostart")
-require("environment")
 require("settings")
 require("curves")
 require("animations")

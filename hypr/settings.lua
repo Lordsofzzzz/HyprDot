@@ -37,6 +37,7 @@ hl.config({
         mouse_move_enables_dpms = true,
         key_press_enables_dpms  = true,
         disable_hyprland_guiutils_check = true,
+        disable_xdg_env_checks = true,
     },
 })
 

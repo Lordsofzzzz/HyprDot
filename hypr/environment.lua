@@ -1,1 +1,0 @@
--- environment moved to ~/.config/uwsm/env (UWSM manages env)
