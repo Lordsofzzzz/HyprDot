@@ -45,6 +45,9 @@ hl.bind("ALT + C", hl.dsp.global("quickshell:calendar"))
 -- Power menu
 hl.bind(mainMod .. " + L", hl.dsp.global("quickshell:powermenu"))
 
+-- Wallpaper picker
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.global("quickshell:wallpaper"))
+
 -- Scroll through workspaces
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
