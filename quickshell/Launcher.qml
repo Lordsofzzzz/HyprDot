@@ -47,7 +47,7 @@ Scope {
         // ── Filtered model with ScriptModel for delegate reuse ─────
         property string query: ""
         readonly property var _filtered: {
-            if (query.length === 0) return allApps.slice(0, 10)
+            if (query.length === 0) return allApps.slice(0, 20)
             var q = query.toLowerCase()
             var scored = []
             for (var i = 0; i < allApps.length; i++) {
@@ -65,7 +65,7 @@ Scope {
             }
             scored.sort(function(a, b) { return b.score - a.score })
             var result = []
-            var len = Math.min(scored.length, 10)
+            var len = Math.min(scored.length, 20)
             for (var j = 0; j < len; j++) result.push(scored[j].app)
             return result
         }
@@ -263,9 +263,8 @@ Scope {
 
                         MouseArea {
                             anchors.fill: parent
-                            hoverEnabled: true
-                            onEntered: appList.currentIndex = index
                             onClicked: launcher.launch(modelData)
+                            cursorShape: Qt.PointingHandCursor
                         }
                     }
 
