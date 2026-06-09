@@ -7,6 +7,7 @@ hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("alacritty"))
 -- App launcher
 hl.bind(mainMod .. " + D", hl.dsp.global("quickshell:launcher"))
 hl.bind(mainMod .. " + W", hl.dsp.global("quickshell:wifi"))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.global("quickshell:wallpaper"))
 
 -- Screenshots (grim + slurp)
 hl.bind("Print",               hl.dsp.exec_cmd("grim"))
@@ -45,8 +46,6 @@ hl.bind("ALT + C", hl.dsp.global("quickshell:calendar"))
 -- Power menu
 hl.bind(mainMod .. " + L", hl.dsp.global("quickshell:powermenu"))
 
--- Wallpaper picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.global("quickshell:wallpaper"))
 
 -- Scroll through workspaces
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
