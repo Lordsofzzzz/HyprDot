@@ -88,7 +88,10 @@ Scope {
             }
         }
 
-        // ── Apply wallpaper — chains swaybg → matugen (post_hook reloads hyprland) ──
+        // ── Apply wallpaper — chains swaybg → matugen → hyprctl reload ──
+        // Note: hyprctl reload is needed because hyprland.lua uses dofile() for
+        // hyprland-colors.lua, which only runs once at startup. Hyprland's autoreload
+        // only watches files loaded via require(), not dofile().
         function applyWallpaper(path) {
             var filePath = path.toString().replace("file://", "")
             // Safe-escape single quotes for shell
@@ -98,6 +101,7 @@ Scope {
                 + 'swaybg -i \'' + safePath + '\' -m fill &\n'
                 + 'disown\n'
                 + 'matugen image \'' + safePath + '\' --source-color-index 0\n'
+                + 'hyprctl reload\n'
             Quickshell.execDetached(["sh", "-c", script])
             picker.visible = false
         }
@@ -113,6 +117,8 @@ Scope {
                 if (picker.allWallpapers.length === 0) picker.rescan()
                 searchField.text = ""
                 searchField.forceActiveFocus()
+            } else {
+                picker.allWallpapers = []
             }
         }
 
@@ -232,8 +238,11 @@ Scope {
                                 anchors { fill: parent; margins: 2 }
                                 source: modelData.path
                                 fillMode: Image.PreserveAspectCrop
-                                smooth: true
+                                smooth: false
                                 asynchronous: true
+                                cache: false
+                                sourceSize.width: 176
+                                sourceSize.height: 121
                             }
 
                             // Selected checkmark
