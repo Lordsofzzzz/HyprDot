@@ -20,3 +20,4 @@ output_path = '~/.config/gtk-4.0/colors.css'
 [templates.hyprland]
 input_path  = "~/.config/matugen/templates/hyprland-colors.lua"
 output_path = "~/.config/hypr/hyprland-colors.lua"
+post_hook   = 'hyprctl reload'

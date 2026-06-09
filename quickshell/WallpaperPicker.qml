@@ -88,10 +88,7 @@ Scope {
             }
         }
 
-        // ── Apply wallpaper — chains swaybg → matugen → hyprctl reload ──
-        // Note: hyprctl reload is needed because hyprland.lua uses dofile() for
-        // hyprland-colors.lua, which only runs once at startup. Hyprland's autoreload
-        // only watches files loaded via require(), not dofile().
+        // ── Apply wallpaper — chains swaybg → matugen (post_hook reloads hyprland) ──
         function applyWallpaper(path) {
             var filePath = path.toString().replace("file://", "")
             // Safe-escape single quotes for shell
@@ -101,7 +98,6 @@ Scope {
                 + 'swaybg -i \'' + safePath + '\' -m fill &\n'
                 + 'disown\n'
                 + 'matugen image \'' + safePath + '\' --source-color-index 0\n'
-                + 'hyprctl reload\n'
             Quickshell.execDetached(["sh", "-c", script])
             picker.visible = false
         }
