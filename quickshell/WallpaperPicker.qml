@@ -1,257 +1,303 @@
-// WallpaperPicker — grid-based wallpaper picker with search and preview
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
 import Quickshell.Hyprland
-import "."
-import "services"
+import Quickshell.Wayland
+import Quickshell.Io
 
 Scope {
-  id: root
+    id: root
 
-  // ── Toggle via: hyprctl dispatch global quickshell:wallpaper ──
-  GlobalShortcut {
-    name: "wallpaper"
-    description: "Toggle wallpaper picker"
-    onPressed: {
-      win.visible = !win.visible
-      if (win.visible) {
-        WallpaperService.stopPreview()
-        if (WallpaperService.wallpapers.length === 0) WallpaperService.rescan()
-      }
-    }
-  }
-
-  // ── State ──────────────────────────────────────────────────────────────
-
-  // Unfiltered list — pass through directly
-  property var filteredWallpapers: WallpaperService.wallpapers
-
-  // Cover-flow dimensions (at Scope level so all children can see them)
-  readonly property real baseItemWidth: 280
-  readonly property real baseItemHeight: baseItemWidth * 1.05
-  readonly property real skewFactor: -0.35
-
-  // ── Window ─────────────────────────────────────────────────────────────
-  PanelWindow {
-    id: win
-    visible: false
-    focusable: true
-    color: "transparent"
-
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    WlrLayershell.namespace: "wallpaper-picker"
-    WlrLayershell.exclusionMode: ExclusionMode.Ignore
-
-    anchors { top: true; bottom: true; left: true; right: true }
-
-    // Invisible catch — click anywhere outside the grid to close
-    MouseArea {
-      anchors.fill: parent
-      Keys.onEscapePressed: win.visible = false
-      onClicked: win.visible = false
+    GlobalShortcut {
+        name: "wallpaper"
+        description: "Toggle wallpaper picker"
+        onPressed: picker.visible = !picker.visible
     }
 
-    onVisibleChanged: {
-      if (visible) grid.forceActiveFocus()
-    }
+    PanelWindow {
+        id: picker
+        visible: false
 
-    // ── Cover-flow carousel (like magetsu002) ──────────────────────────
-    ListView {
-      id: grid
-      anchors.centerIn: parent
-      width: parent.width
-      height: root.baseItemHeight + 60
-      spacing: 0
-      orientation: ListView.Horizontal
-      clip: true
-      currentIndex: 0
-      focus: true
-      interactive: true
-      keyNavigationWraps: true
-      cacheBuffer: 600
+        anchors { top: true; bottom: true; left: true; right: true }
+        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+        WlrLayershell.namespace: "wallpaper-picker"
+        WlrLayershell.exclusionMode: ExclusionMode.Ignore
+        color: "transparent"
 
-      highlightRangeMode: ListView.StrictlyEnforceRange
-      preferredHighlightBegin: (grid.width / 2) - (root.baseItemWidth * 1.5) / 2
-      preferredHighlightEnd: (grid.width / 2) + (root.baseItemWidth * 1.5) / 2
-      highlightMoveDuration: 350
+        readonly property string wallpaperPath: Quickshell.env("HOME") + "/Pictures/wallpapers"
 
-      header: Item { width: Math.max(0, (grid.width / 2) - (root.baseItemWidth * 1.5) / 2); height: 1 }
-      footer: Item { width: Math.max(0, (grid.width / 2) - (root.baseItemWidth * 1.5) / 2); height: 1 }
+        // ── Wallpaper list (filled asynchronously via Process) ──
+        property var allWallpapers: []
+        property var _pendingWallpapers: []
+        property bool _scanFailed: false
+        readonly property int _gridColumns: Math.max(1, Math.floor(grid.width / (grid.cellWidth || 1)))
 
-      Keys.onEscapePressed: {
-        if (WallpaperService.showPreview) {
-          WallpaperService.stopPreview()
-        } else {
-          win.visible = false
-        }
-      }
-      Keys.onReturnPressed: {
-        if (filteredWallpapers.length > 0) {
-          var idx = Math.min(grid.currentIndex, filteredWallpapers.length - 1)
-          WallpaperService.setWallpaper(filteredWallpapers[idx])
-          win.visible = false
-        }
-      }
+        // ── Search query ──
+        property string query: ""
 
-      model: root.filteredWallpapers
-
-      delegate: Item {
-        id: delegateRoot
-        required property string modelData
-        required property int index
-
-        readonly property bool isCurrent: ListView.isCurrentItem
-        readonly property real targetWidth: isCurrent ? (root.baseItemWidth * 1.5) : (root.baseItemWidth * 0.5)
-        readonly property real targetHeight: isCurrent ? (root.baseItemHeight + 20) : root.baseItemHeight
-
-        width: targetWidth
-        height: targetHeight
-        opacity: isCurrent ? 1.0 : 0.5
-        z: isCurrent ? 10 : 1
-
-        Behavior on width { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
-        Behavior on height { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
-        Behavior on opacity { NumberAnimation { duration: 350; easing.type: Easing.InOutQuad } }
-
-        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
-
-        Item {
-          anchors.centerIn: parent
-          width: parent.width
-          height: parent.height
-
-          transform: Matrix4x4 {
-            property real s: root.skewFactor
-            matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-          }
-
-          Rectangle {
-            anchors.fill: parent
-            anchors.margins: 4
-            radius: 8
-            color: Qt.rgba(0, 0, 0, 0.4)
-            border.color: WallpaperService.currentWallpaper === modelData
-              ? Colors.accent
-              : "transparent"
-            border.width: WallpaperService.currentWallpaper === modelData ? 2 : 0
-            clip: true
-
-            Image {
-              anchors.centerIn: parent
-              width: (root.baseItemWidth * 1.5) + 2 * (root.baseItemHeight + 20) * Math.abs(root.skewFactor) + 40
-              height: root.baseItemHeight + 20
-              source: "file://" + modelData
-              fillMode: Image.PreserveAspectCrop
-              asynchronous: true
-              smooth: true
-              sourceSize: Qt.size(660, 320)
-
-              transform: Matrix4x4 {
-                property real s: -root.skewFactor
-                matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-              }
-            }
-
-            MouseArea {
-              anchors.fill: parent
-              hoverEnabled: true
-              cursorShape: Qt.PointingHandCursor
-              acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-              onClicked: function(mouse) {
-                grid.currentIndex = index
-                if (mouse.button === Qt.RightButton) {
-                  WallpaperService.preview(modelData)
-                } else {
-                  WallpaperService.setWallpaper(modelData)
-                  win.visible = false
+        // ── Filtered list — re-evaluates when query or allWallpapers changes ──
+        readonly property var _filtered: {
+            var q = query.toLowerCase()
+            var result = []
+            var wallpapers = picker.allWallpapers
+            for (var i = 0; i < wallpapers.length; i++) {
+                var path = wallpapers[i]
+                var name = path.split('/').pop().toLowerCase()
+                if (q.length === 0 || name.indexOf(q) !== -1) {
+                    result.push({ path: "file://" + path, name: name })
                 }
-              }
             }
-          }
-        }
-      }
-
-      // Empty state
-      Text {
-        anchors.centerIn: parent
-        visible: grid.count === 0
-        text: "No wallpapers found"
-        color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.4)
-        font.family: "Inter"
-        font.pixelSize: 14
-      }
-    }
-
-    // ── Preview overlay (right-click) ────────────────────────────────────
-    Rectangle {
-      anchors.fill: parent
-      color: Qt.rgba(0, 0, 0, 0.85)
-      visible: WallpaperService.showPreview && WallpaperService.previewPath !== ""
-
-      MouseArea {
-        anchors.fill: parent
-        onClicked: WallpaperService.stopPreview()
-      }
-
-      // Preview image
-      Image {
-        anchors.centerIn: parent
-        width: parent.width * 0.8
-        height: parent.height * 0.8
-        source: WallpaperService.showPreview && WallpaperService.previewPath !== ""
-          ? "file://" + WallpaperService.previewPath
-          : ""
-        fillMode: Image.PreserveAspectFit
-        asynchronous: true
-        smooth: true
-      }
-
-      // Apply button
-      Rectangle {
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 40
-        width: applyRow.width + 32
-        height: 40
-        radius: 20
-        color: Colors.accent
-
-        Row {
-          id: applyRow
-          anchors.centerIn: parent
-          spacing: 8
-
-          Text {
-            text: "\uE44F" // phosphor check
-            font.family: "Phosphor-Fill"
-            font.pixelSize: 14
-            color: Colors.bg
-            anchors.verticalCenter: parent.verticalCenter
-          }
-          Text {
-            text: "Apply Wallpaper"
-            color: Colors.bg
-            font.family: "Inter"
-            font.pixelSize: 13
-            font.weight: Font.Bold
-            anchors.verticalCenter: parent.verticalCenter
-          }
+            return result
         }
 
+        ScriptModel { id: wallModel; values: picker._filtered }
+
+        // ── Background wallpaper scanner ──
+        function rescan() {
+            picker.allWallpapers = []
+            picker._pendingWallpapers = []
+            picker._scanFailed = false
+            scanner.running = true
+        }
+
+        Process {
+            id: scanner
+            command: [
+                "sh", "-c",
+                'find "' + picker.wallpaperPath + '" -maxdepth 1 -type f \\('
+                + ' -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp"'
+                + ' \\) 2>/dev/null | sort -u'
+            ]
+            running: false
+
+            stdout: SplitParser {
+                onRead: function(data) {
+                    var p = data.trim()
+                    if (p !== "") {
+                        picker._pendingWallpapers.push(p)
+                    }
+                }
+            }
+
+            onExited: function(exitCode) {
+                // Batch-assign once instead of per-line concat to avoid O(n²) copies
+                picker.allWallpapers = picker._pendingWallpapers
+                picker._pendingWallpapers = []
+                if (exitCode !== 0) picker._scanFailed = true
+            }
+        }
+
+        // ── Apply wallpaper — chains swaybg → matugen → hyprctl reload ──
+        // Note: hyprctl reload is needed because hyprland.lua uses dofile() for
+        // hyprland-colors.lua, which only runs once at startup. Hyprland's autoreload
+        // only watches files loaded via require(), not dofile().
+        function applyWallpaper(path) {
+            var filePath = path.toString().replace("file://", "")
+            // Safe-escape single quotes for shell
+            var safePath = filePath.replace(/'/g, "'\\''")
+            var script = ''
+                + 'pkill swaybg 2>/dev/null || true\n'
+                + 'swaybg -i \'' + safePath + '\' -m fill &\n'
+                + 'disown\n'
+                + 'matugen image \'' + safePath + '\' --source-color-index 0\n'
+                + 'hyprctl reload\n'
+            Quickshell.execDetached(["sh", "-c", script])
+            picker.visible = false
+        }
+
+        // ── Click outside to close ──
         MouseArea {
-          anchors.fill: parent
-          cursorShape: Qt.PointingHandCursor
-          onClicked: {
-            WallpaperService.setWallpaper(WallpaperService.previewPath)
-            WallpaperService.stopPreview()
-            win.visible = false
-          }
+            anchors.fill: parent
+            onClicked: picker.visible = false
         }
-      }
+
+        onVisibleChanged: {
+            if (visible) {
+                if (picker.allWallpapers.length === 0) picker.rescan()
+                searchField.text = ""
+                searchField.forceActiveFocus()
+            }
+        }
+
+        // ── UI ──
+        Rectangle {
+            anchors.centerIn: parent
+            width: 560
+            height: 520
+            radius: 12
+            color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.95)
+            border.color: Colors.accent
+            border.width: 1
+
+            MouseArea { anchors.fill: parent; onClicked: {} }
+
+            ColumnLayout {
+                anchors { fill: parent; leftMargin: 16; rightMargin: 16; topMargin: 16; bottomMargin: 16 }
+                spacing: 12
+
+                // ── Search bar ──
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 44
+                    radius: 4
+                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.05)
+
+                    RowLayout {
+                        anchors { fill: parent; leftMargin: 14; rightMargin: 14 }
+                        spacing: 10
+
+                        Text {
+                            text: "\uE530"
+                            font.family: "Phosphor-Fill"
+                            font.pixelSize: 18
+                            color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.4)
+                        }
+
+                        TextInput {
+                            id: searchField
+                            Layout.fillWidth: true
+                            color: Colors.fg
+                            font.family: "Inter"
+                            font.pixelSize: 15
+                            verticalAlignment: TextInput.AlignVCenter
+                            clip: true
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.IBeamCursor
+                                acceptedButtons: Qt.NoButton
+                            }
+                            onTextChanged: {
+                                picker.query = text
+                                grid.currentIndex = 0
+                            }
+                            Keys.onEscapePressed: picker.visible = false
+                            Keys.onReturnPressed: {
+                                var w = wallModel.values[grid.currentIndex]
+                                if (w) picker.applyWallpaper(w.path)
+                            }
+                            Keys.onLeftPressed:  if (grid.currentIndex > 0) grid.currentIndex--
+                            Keys.onRightPressed: if (grid.currentIndex < grid.count - 1) grid.currentIndex++
+                            Keys.onUpPressed: {
+                                if (grid.currentIndex - picker._gridColumns >= 0) grid.currentIndex -= picker._gridColumns
+                            }
+                            Keys.onDownPressed: {
+                                if (grid.currentIndex + picker._gridColumns < grid.count) grid.currentIndex += picker._gridColumns
+                            }
+                        }
+
+                        Text {
+                            visible: searchField.text.length > 0
+                            text: "\uE4F6"
+                            font.family: "Phosphor-Fill"
+                            font.pixelSize: 16
+                            color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: searchField.text = ""
+                            }
+                        }
+                    }
+                }
+
+                // ── Wallpaper Grid ──
+                GridView {
+                    id: grid
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    model: wallModel
+                    currentIndex: 0
+                    clip: true
+                    cellWidth: 176
+                    cellHeight: 121
+
+                    delegate: Item {
+                        required property var modelData
+                        required property int index
+                        width: grid.cellWidth
+                        height: grid.cellHeight
+
+                        Rectangle {
+                            anchors { fill: parent; margins: 4 }
+                            radius: 6
+                            color: "transparent"
+                            border.color: grid.currentIndex === index
+                                ? Colors.accent
+                                : hov.containsMouse
+                                    ? Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.15)
+                                    : "transparent"
+                            border.width: 2
+                            clip: true
+
+                            HoverHandler { id: hov }
+
+                            Image {
+                                anchors { fill: parent; margins: 2 }
+                                source: modelData.path
+                                fillMode: Image.PreserveAspectCrop
+                                smooth: true
+                                asynchronous: true
+                            }
+
+                            // Selected checkmark
+                            Rectangle {
+                                visible: grid.currentIndex === index
+                                anchors { top: parent.top; right: parent.right; margins: 5 }
+                                width: 18; height: 18
+                                radius: 9
+                                color: Colors.accent
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "\uE298"
+                                    font.family: "Phosphor-Fill"
+                                    font.pixelSize: 11
+                                    color: Colors.bg
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                grid.currentIndex = index
+                                picker.applyWallpaper(modelData.path)
+                            }
+                        }
+                    }
+
+                    // Empty state
+                    Text {
+                        anchors.centerIn: parent
+                        visible: grid.count === 0
+                        text: picker._scanFailed
+                            ? "Scan failed — check wallpaper path"
+                            : allWallpapers.length === 0
+                                ? "Scanning for wallpapers..."
+                                : "No wallpapers found"
+                        color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.3)
+                        font.family: "Inter"
+                        font.pixelSize: 14
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
+                }
+
+                Text {
+                    text: "← → ↑ ↓ navigate  ↵ apply  esc close"
+                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.25)
+                    font.family: "Inter"
+                    font.pixelSize: 10
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+        }
     }
-  }
 }
