@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
@@ -46,6 +45,14 @@ Scope {
 
         // ── Filtered model with ScriptModel for delegate reuse ─────
         property string query: ""
+
+        readonly property Timer _searchTimer: Timer {
+            interval: 50
+            onTriggered: {
+                launcher.query = searchField.text
+                appList.currentIndex = 0
+            }
+        }
         readonly property var _filtered: {
             if (query.length === 0) return allApps.slice(0, 20)
             var q = query.toLowerCase()
@@ -152,8 +159,7 @@ Scope {
                             verticalAlignment: TextInput.AlignVCenter
                             clip: true
                             onTextChanged: {
-                                launcher.query = text
-                                appList.currentIndex = 0
+                                launcher._searchTimer.restart()
                             }
                             Keys.onEscapePressed: {
                                 launcher.visible = false

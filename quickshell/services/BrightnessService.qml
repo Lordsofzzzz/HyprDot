@@ -32,12 +32,18 @@ Singleton {
         }
     }
 
+    Timer {
+        id: debounce
+        interval: 50
+        onTriggered: reader.running = true
+    }
+
     Process {
         id: watcher
         command: ["sh", "-c", "udevadm monitor --subsystem-match=backlight --udev"]
         running: true
         stdout: SplitParser {
-            onRead: reader.running = true
+            onRead: debounce.restart()
         }
     }
 
