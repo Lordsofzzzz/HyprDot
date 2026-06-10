@@ -11,7 +11,7 @@ Singleton {
 
     readonly property int spacing: 8
     readonly property int tightSpacing: 4
-    readonly property int looseSpacing: 12
+    readonly property int looseSpacing: 8
 
     readonly property int fontSize: 16
     readonly property int smallFontSize: 14

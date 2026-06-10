@@ -6,8 +6,8 @@ import "../services"
 
 Item {
     Layout.alignment: Qt.AlignVCenter
-    implicitWidth: rowLayout.implicitWidth
-    implicitHeight: rowLayout.implicitHeight
+    implicitWidth: label.implicitWidth
+    implicitHeight: label.implicitHeight
 
     property int _pendingDelta: 0
 
@@ -22,30 +22,22 @@ Item {
         }
     }
 
-    RowLayout {
-        id: rowLayout
-        anchors.fill: parent
-        spacing: Config.tightSpacing
-
-        Text {
-            color: Colors.fg
-            font.family: "Phosphor-Fill"
-            font.pixelSize: Config.fontSize
-            text: BrightnessService.pct < 34 ? "\uE474" : "\uE472"
-            visible: BrightnessService.pct >= 1
-        }
-
-        Text {
-            color: Colors.fg
-            font.family: "Inter"
-            font.pixelSize: Config.fontSize
-            text: BrightnessService.pct + "%"
-            visible: BrightnessService.pct >= 1
-        }
+    Text {
+        id: label
+        font.family: "Phosphor-Fill"
+        font.pixelSize: Config.fontSize
+        color: hover.hovered ? Colors.accent : Colors.fg
+        text: BrightnessService.pct < 34 ? "\uE474" : "\uE472"
+        opacity: BrightnessService.pct >= 1 ? 1 : 0.3
+        Behavior on color { ColorAnimation { duration: 100 } }
+        Behavior on opacity { NumberAnimation { duration: 100 } }
     }
+
+    HoverHandler { id: hover }
 
     MouseArea {
         anchors.fill: parent
+        acceptedButtons: Qt.NoButton
         onWheel: function(wheel) {
             _pendingDelta += wheel.angleDelta.y > 0 ? 5 : -5
             debounceTimer.restart()

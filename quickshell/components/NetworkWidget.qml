@@ -3,10 +3,9 @@ import Quickshell
 import Quickshell.Networking
 import "../"
 
-Text {
-    color: Colors.fg
-    font.family: "Phosphor-Fill"
-    font.pixelSize: Config.fontSize
+Item {
+    implicitWidth: label.implicitWidth
+    implicitHeight: label.implicitHeight
 
     property string netState: {
         var result = "none"
@@ -17,7 +16,17 @@ Text {
         })
         return result
     }
-    text: netState === "wifi" ? "\uE4EA"
-        : netState === "eth"  ? "\uEDDE"
-        :                       "\uE4F2"
+
+    Text {
+        id: label
+        font.family: "Phosphor-Fill"
+        font.pixelSize: Config.fontSize
+        color: hover.hovered ? Colors.accent : Colors.fg
+        text: netState === "wifi" ? "\uE4EA"
+            : netState === "eth"  ? "\uEDDE"
+            :                       "\uE4F2"
+        Behavior on color { ColorAnimation { duration: 100 } }
+    }
+
+    HoverHandler { id: hover }
 }

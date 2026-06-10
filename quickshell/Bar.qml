@@ -102,8 +102,22 @@ PanelWindow {
 
             BluetoothWidget { Layout.alignment: Qt.AlignVCenter }
             NetworkWidget { Layout.alignment: Qt.AlignVCenter }
+
+            Rectangle {
+                Layout.alignment: Qt.AlignVCenter
+                width: 2; height: 16
+                color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
+            }
+
             AudioWidget { Layout.alignment: Qt.AlignVCenter }
             MicMuteWidget { Layout.alignment: Qt.AlignVCenter }
+
+            Rectangle {
+                Layout.alignment: Qt.AlignVCenter
+                width: 2; height: 16
+                color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.12)
+            }
+
             BacklightWidget { Layout.alignment: Qt.AlignVCenter }
             BatteryWidget { Layout.alignment: Qt.AlignVCenter }
         }

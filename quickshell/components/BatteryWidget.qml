@@ -16,24 +16,29 @@ RowLayout {
         ["\uE7C6","\uE7BE","\uE7C0","\uE7C2","\uE7C4"]
 
     Text {
+        id: icon
         font.family: "Phosphor-Fill"
         font.pixelSize: Config.fontSize
         text: full     ? "\uE7C4"
             : charging ? "\uE0BC"
             :            icons[Math.min(Math.floor(pct / 20), 4)]
-        color: pct < 15 ? Colors.urgent
+        color: hover.hovered ? Colors.accent
+             : pct < 15 ? Colors.urgent
              : pct < 30 ? Colors.dim
              : Colors.fg
+        Behavior on color { ColorAnimation { duration: 100 } }
     }
 
     Text {
         font.family: "Inter"
-        font.pixelSize: Config.fontSize
-        text: full     ? "Full"
-            : charging ? pct + "%"
-            :            pct + "%"
-        color: pct < 15 ? Colors.urgent
+        font.pixelSize: Config.smallFontSize
+        color: hover.hovered ? Colors.accent
+             : pct < 15 ? Colors.urgent
              : pct < 30 ? Colors.dim
              : Colors.fg
+        text: full ? "Full" : pct + "%"
+        Behavior on color { ColorAnimation { duration: 100 } }
     }
+
+    HoverHandler { id: hover }
 }
