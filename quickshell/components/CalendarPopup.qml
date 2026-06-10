@@ -239,16 +239,6 @@ PanelWindow {
                 }
             }
 
-            // ── Today marker ───────────────────────────────────
-            Text {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: "Today"
-                color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.7)
-                font.family: "Inter"
-                font.pixelSize: 10
-                font.weight: Font.Medium
-            }
         }
     }
 
