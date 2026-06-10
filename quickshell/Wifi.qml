@@ -109,6 +109,11 @@ Scope {
             net.connectWithPsk(psk)
         }
 
+        function forgetNetwork(net) {
+            wifiPanel.statusMsg = "Forgot " + net.name
+            net.forget()
+        }
+
         onVisibleChanged: {
             if (visible) {
                 expandedSsid = ""
@@ -143,6 +148,9 @@ Scope {
             color: Qt.rgba(Colors.bg.r, Colors.bg.g, Colors.bg.b, 0.95)
             border.color: Colors.accent
             border.width: 1
+            clip: true
+
+            Behavior on height { NumberAnimation { duration: 100 } }
 
             MouseArea {
                 anchors.fill: parent
@@ -219,27 +227,6 @@ Scope {
                             font.pixelSize: 13
                         }
 
-                        // Small ON/OFF badge
-                        Rectangle {
-                            width: 32
-                            height: 18
-                            radius: 3
-                            color: Networking.wifiEnabled
-                                ? Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.2)
-                                : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.08)
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: Networking.wifiEnabled ? "ON" : "OFF"
-                                color: Networking.wifiEnabled
-                                    ? Colors.accent
-                                    : Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
-                                font.family: "Inter"
-                                font.pixelSize: 9
-                                font.weight: Font.Medium
-                            }
-                        }
-
                         // Focus indicator chevron
                         Text {
                             visible: toggleRow.activeFocus
@@ -256,7 +243,8 @@ Scope {
                     Layout.fillWidth: true
                     height: 1
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.06)
-                    visible: Networking.wifiEnabled
+                    opacity: Networking.wifiEnabled ? 1 : 0
+                    Behavior on opacity { NumberAnimation { duration: 80 } }
                 }
 
                 // Status message
@@ -279,7 +267,9 @@ Scope {
                     clip: true
                     spacing: 2
                     currentIndex: 0
-                    visible: Networking.wifiEnabled
+                    opacity: Networking.wifiEnabled ? 1 : 0
+                    enabled: Networking.wifiEnabled
+                    Behavior on opacity { NumberAnimation { duration: 80 } }
 
                     // Two-way: ↑ goes back to toggleRow
                     KeyNavigation.up: toggleRow
@@ -340,6 +330,13 @@ Scope {
                             wifiPanel.statusMsg = Networking.wifiEnabled ? "WiFi enabled" : "WiFi disabled"
                             event.accepted = true
                         }
+                        if (event.key === Qt.Key_Delete) {
+                            var net = wifiPanel.networks[currentIndex]
+                            if (net && net.known) {
+                                wifiPanel.forgetNetwork(net)
+                                event.accepted = true
+                            }
+                        }
                     }
 
                     Text {
@@ -379,7 +376,7 @@ Scope {
                                 }
                                 spacing: 10
 
-                                 Text {
+                                Text {
                                     text: wifiPanel.signalIcon(modelData.signalStrength)
                                     font.family: "Phosphor-Fill"
                                     font.pixelSize: 16
@@ -397,21 +394,6 @@ Scope {
                                     elide: Text.ElideRight
                                 }
 
-                                Text {
-                                    visible: wifiPanel.requiresPassword(modelData)
-                                    text: "\uE2FE"
-                                    font.family: "Phosphor-Fill"
-                                    font.pixelSize: 14
-                                    color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.35)
-                                }
-
-                                Text {
-                                    visible: modelData.connected
-                                    text: "\uE182"
-                                    font.family: "Phosphor-Fill"
-                                    font.pixelSize: 14
-                                    color: Colors.accent
-                                }
                             }
 
                             // Mouse still works for hover highlight
@@ -495,32 +477,6 @@ Scope {
                                     }
                                 }
 
-                                Rectangle {
-                                    width: 60
-                                    height: 28
-                                    radius: 4
-                                    color: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.15)
-
-                                    Text {
-                                        anchors.centerIn: parent
-                                        text: "↵ Connect"
-                                        color: Colors.accent
-                                        font.family: "Inter"
-                                        font.pixelSize: 10
-                                    }
-
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            if (passField.text.length > 0) {
-                                                wifiPanel.connectWithPassword(modelData, passField.text)
-                                                wifiPanel.expandedSsid = ""
-                                                netList.forceActiveFocus()
-                                            }
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
@@ -534,7 +490,7 @@ Scope {
                 }
 
                 Text {
-                    text: "↑↓ navigate  ↵ select  t toggle  r rescan  esc close"
+                    text: "↑↓ navigate  ↵ select  t toggle  r rescan  del forget  esc close"
                     color: Qt.rgba(Colors.fg.r, Colors.fg.g, Colors.fg.b, 0.25)
                     font.family: "Inter"
                     font.pixelSize: 10
