@@ -9,6 +9,19 @@ Item {
     implicitWidth: rowLayout.implicitWidth
     implicitHeight: rowLayout.implicitHeight
 
+    property int _pendingDelta: 0
+
+    Timer {
+        id: debounceTimer
+        interval: 80
+        onTriggered: {
+            if (_pendingDelta !== 0) {
+                BrightnessService.set(BrightnessService.pct + _pendingDelta)
+                _pendingDelta = 0
+            }
+        }
+    }
+
     RowLayout {
         id: rowLayout
         anchors.fill: parent
@@ -34,8 +47,8 @@ Item {
     MouseArea {
         anchors.fill: parent
         onWheel: function(wheel) {
-            var dir = wheel.angleDelta.y > 0 ? 5 : -5
-            BrightnessService.set(BrightnessService.pct + dir)
+            _pendingDelta += wheel.angleDelta.y > 0 ? 5 : -5
+            debounceTimer.restart()
         }
     }
 }
