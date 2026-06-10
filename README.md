@@ -36,7 +36,7 @@ git commit -m "change something"
 git push
 ```
 
-Or deploy individually:
+Or deploy individual directories with GNU Stow:
 
 ```bash
 stow hypr        # Hyprland compositor config
@@ -45,7 +45,6 @@ stow quickshell  # Wayland shell (bar, launcher, wifi panel)
 stow matugen     # Material You theming config
 stow gtk-3.0     # GTK3 colors.css import
 stow gtk-4.0     # GTK4 colors.css import
-stow scripts     # Wallpaper picker → ~/.local/bin/
 ```
 
 ## What's included
@@ -114,17 +113,11 @@ Regenerate colors after changing wallpaper:
 matugen image ~/path/to/wallpaper --source-color-index 0
 ```
 
-Then reload Hyprland, restart Quickshell, or run `wallpaper-picker.sh` which does all of this automatically.
-
-### `scripts/`
-
-- `wallpaper-picker.sh` — picks a wallpaper and runs matugen, reloads Hyprland, restarts Quickshell
-  - No arguments: picks a random wallpaper from `~/Pictures/wallpapers`
-  - `-r` / `--random`: picks a random wallpaper
-  - `-s <path>`: sets a specific image
-  - `--restore`: restores the last wallpaper from cache (used on boot autostart)
+Then reload Hyprland and restart Quickshell for all changes to take effect.
 
 ## Keybinds
+
+SUPER is the Windows/Mod4 key.
 
 | Key | Action |
 |---|---|
