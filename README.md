@@ -129,7 +129,7 @@ Material You theming engine — maps templates to output files:
 | Template | Generates |
 |---|---|
 | `templates/quickshell.qml` | `~/.config/quickshell/Colors.qml` |
-| `templates/alacritty.toml` | `~/.config/alacritty/alacritty.toml` |
+| `templates/alacritty.toml` | `~/.config/alacritty/colors.toml` |
 | `templates/hyprland-colors.lua` | `~/.config/hypr/hyprland-colors.lua` |
 | `templates/gtk-colors.css` | `~/.config/gtk-3.0/colors.css` + `~/.config/gtk-4.0/colors.css` |
 
@@ -188,6 +188,7 @@ SUPER is the Windows/Mod4 key.
 | `SUPER+click` | Drag window |
 | `SUPER+right-click` | Resize window |
 | `XF86AudioLowerVolume` / `RaiseVolume` / `Mute` | Volume control |
+| `XF86AudioMicMute` | Toggle mic mute |
 | `XF86AudioPlay` / `Pause` / `Next` / `Prev` | Media playback (playerctl) |
 | `XF86MonBrightnessDown` / `Up` | Backlight control |
 
