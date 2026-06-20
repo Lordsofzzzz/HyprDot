@@ -4,10 +4,6 @@ Hyprland dotfiles — the repo lives directly at `~/.config`, no symlink manager
 
 ## Screenshots
 
-<details>
-<summary>Click to expand</summary>
-<br>
-
 <p align="center">
   <img src="assets/screenshot-1.png" width="32%" />
   <img src="assets/screenshot-2.png" width="32%" />
@@ -23,8 +19,6 @@ Hyprland dotfiles — the repo lives directly at `~/.config`, no symlink manager
   <img src="assets/screenshot-8.png" width="32%" />
   <img src="assets/screenshot-9.png" width="32%" />
 </p>
-
-</details>
 
 ## Prerequisites
 
